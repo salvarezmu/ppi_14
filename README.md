@@ -8,8 +8,8 @@ Proyecto de programación para ingeniería grupo 14.
 
 - Omar Andres Zambrano Arias
 
-  oazambranoa@unal.edu.co
+  Correo: oazambranoa@unal.edu.co
 
 - Russbell Noreña Mejia
 
-  rnorena@unal.edu.co
+  Correo: rnorena@unal.edu.co
