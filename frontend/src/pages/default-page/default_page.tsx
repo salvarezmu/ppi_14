@@ -8,6 +8,7 @@ class DefaultPage extends React.Component {
         return <div id="default_page_container">
             <h1>Hello World</h1>
             <Link to={RoutesConstants.TEST_PAGE}><input type="button" value="Test"/></Link>
+            <Link to={RoutesConstants.VALIDATE_PAGE}><input type="button" value='Validate Token' /></Link>
         </div>;
     }
 }
