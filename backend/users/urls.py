@@ -8,4 +8,5 @@ router.register(r'', views.UserView, 'users')
 
 urlpatterns = [
     path("", include(router.urls)),
+    path('api/validate-address/', views.validate_tron_address, name='validate_tron_address'),
 ]

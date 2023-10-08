@@ -1,51 +1,42 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 function ValidateAddress() {
-    const [address, setAddress] = useState('');
-    const [isValid, setIsValid] = useState<boolean | null>(null);
+  const [address, setAddress] = useState('');
+  const [validationResult, setValidationResult] = useState('');
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        console.log(address);
-        try {
-            const response = await fetch('/validate_address/', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ address }), // Envía la dirección al backend en formato JSON
-            });
+  const handleAddressChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setAddress(event.target.value);
+  };
 
-            if (response.ok) {
-                const data = await response.json();
-                setIsValid(data.is_valid);
-            } else {
-                console.error('Error al enviar la solicitud al servidor');
-                throw new Error();
-            }
-            } catch (error) {
-            console.error('Error al procesar la solicitud:', error);
-        }
-    };
+  const validateAddress = () => {
+    axios
+      .post('/api/validate-address/', { address: address })
+      .then((response) => {
+        // Comprueba si la respuesta es una cadena "true" o "false"
+        const isValid = response.data.result === 'true';
+        setValidationResult(isValid ? 'Valid' : 'Invalid');
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
-    return (
-        <div>
-            <form onSubmit={handleSubmit}>
-                <input
-                    type="text"
-                    placeholder="Dirección TRON"
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                />
-                <button type="submit">Validar Dirección</button>
-            </form>
-            {isValid === null ? null : isValid ? (
-                <p>La dirección es válida</p>
-            ) : (
-                <p>La dirección no es válida</p>
-            )}
-        </div>
-    );
+  return (
+    <div>
+      <h1>Validate TRON Address</h1>
+      <input
+        type="text"
+        placeholder="Enter TRON Address"
+        value={address}
+        onChange={handleAddressChange}
+      />
+      <button onClick={validateAddress}>Validate</button>
+      <div>
+        {validationResult && <p>Validation Result: {validationResult}</p>}
+      </div>
+    </div>
+  );
 }
 
 export default ValidateAddress;
