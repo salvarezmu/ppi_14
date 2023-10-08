@@ -1,11 +1,10 @@
 import axios, {AxiosRequestConfig, AxiosResponse} from 'axios';
-import {BackendConstants} from '../constants/BackendConstants';
 
 export class AxiosUtils {
 
     public static async get<T>(url: string): Promise<T | void> {
         try {
-            const config: AxiosRequestConfig = {baseURL: BackendConstants.BASE_URL};
+            const config: AxiosRequestConfig = {baseURL: process.env.REACT_APP_BASE_URL};
             const data: AxiosResponse = await axios.get(url, config);
             this.validateData(data);
             return data.data;
