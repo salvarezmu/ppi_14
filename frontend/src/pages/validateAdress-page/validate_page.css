@@ -1,0 +1,44 @@
+.ValidateAddress-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  
+  .ValidateAddress-form {
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    text-align: center;
+  }
+  
+  .ValidateAddress-title {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  .ValidateAddress-input {
+    padding: 10px;
+    margin: 5px;
+    width: 300px;
+  }
+  
+  .ValidateAddress-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .ValidateAddress-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .ValidateAddress-info {
+    margin-top: 20px;
+  }
