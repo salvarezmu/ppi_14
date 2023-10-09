@@ -1,5 +1,5 @@
 import React from 'react';
-import './default_page.css';
+import './transactions.css';
 import {Link} from 'react-router-dom';
 import {RoutesConstants} from '../../constants/RoutesConstants';
 import { AxiosUtils } from '../../utils/AxiosUtils';
@@ -14,7 +14,7 @@ interface State {
   }
   
 
-class DefaultPage extends React.Component<{}, State> {
+class Transactions extends React.Component<{}, State> {
     constructor(props: {}) {
         super(props);
         this.state = {
@@ -158,4 +158,4 @@ class DefaultPage extends React.Component<{}, State> {
       
 }
 
-export default DefaultPage;
+export default Transactions;
