@@ -1,5 +1,5 @@
 export enum RoutesConstants {
-    DEFAULT_PAGE = '/',
-    TEST_PAGE = 'test',
-    VALIDATE_PAGE = 'validate'
+    TRANSACTIONS = 'transactions',
+    VALIDATE_PAGE = 'validate',
+    HOME = '/'
 }

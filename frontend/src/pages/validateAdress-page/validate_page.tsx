@@ -26,7 +26,6 @@ const ValidateAddress: React.FC = () => {
       if (response.data.result) {
         // Si la dirección es válida, establece isValid en true y obtiene información de la cuenta
         setIsValid(true);
-        await getAccountInfo();
       } else {
         // Si la dirección no es válida, establece isValid en false y borra la información de la cuenta
         setIsValid(false);
@@ -36,23 +35,6 @@ const ValidateAddress: React.FC = () => {
       console.error('Error validating address:', error);
       // En caso de error, establece isValid en false y borra la información de la cuenta
       setIsValid(false);
-      setAccountInfo(null);
-    }
-  };
-
-  // Función para obtener información de la cuenta
-  const getAccountInfo = async () => {
-    try {
-      // Realiza una solicitud GET a la API para obtener información de la cuenta
-      const response = await axios.get(
-        `https://api.shasta.trongrid.io/wallet/getaccount?address=${address}`
-      );
-
-      // Almacena la información de la cuenta en el estado accountInfo
-      setAccountInfo(response.data);
-    } catch (error) {
-      console.error('Error getting account info:', error);
-      // En caso de error, borra la información de la cuenta
       setAccountInfo(null);
     }
   };

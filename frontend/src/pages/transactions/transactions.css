@@ -1,0 +1,131 @@
+#default_page_container {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+/* default_page.css */
+
+.search-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .search-button:hover {
+    background-color: #0056b3; /* Cambia el color de fondo al pasar el mouse */
+    transform: scale(1.05); /* Efecto de escala al pasar el mouse */
+  }
+  
+  
+  /* Estilos adicionales para centrar la página o el contenedor si es necesario */
+  #test_page_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Ajusta la altura según tus necesidades */
+  }
+
+  /* default_page.css */
+
+.address-input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    transition: border-color 0.3s ease;
+  }
+  
+  .address-input::placeholder {
+    color: #999;
+  }
+  
+  .address-input:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+
+  /* default_page.css */
+
+.transactions-section {
+    max-height: 300px; /* Altura máxima para permitir el desplazamiento vertical */
+    overflow-y: auto; /* Habilitar el desplazamiento vertical cuando sea necesario */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    margin-top: 20px;
+  }
+  
+  .transaction {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+  }
+  
+  .transaction h3 {
+    margin: 0;
+  }
+  
+  /* Agrega más estilos según tus preferencias */
+/* En tu archivo CSS */
+.balance-section {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  
+  .account {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+  
+  .balance {
+    width: 200px;
+    padding: 10px;
+    margin: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
+    text-align: center;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .balance h3 {
+    font-size: 18px;
+    color: #333;
+  }
+
+  /* Agrega estos estilos en tu archivo CSS existente */
+.balance-button {
+    background-color: #007bff; /* Cambia el color de fondo según tus preferencias */
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px; /* Añade un margen derecho para separar los botones */
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  /* Estilo al pasar el mouse por encima */
+  .balance-button:hover {
+    background-color: #0056b3; /* Cambia el color de fondo al pasar el mouse */
+    transform: scale(1.05); /* Efecto de escala al pasar el mouse */
+  }
+  
+  
