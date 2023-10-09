@@ -1,1 +1,13 @@
 .idea/
+# Ignorar ambiente virtual
+venv/
+env/
+virtualenv/
+
+# Ignorar archivos de caché de Python (para Python)
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignorar archivos de entorno
+.env
