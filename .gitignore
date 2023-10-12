@@ -16,3 +16,6 @@ __pycache__/
 node_modules/
 package.json
 package-log.json
+
+#Ignorar configuración de VS
+.vscode/
