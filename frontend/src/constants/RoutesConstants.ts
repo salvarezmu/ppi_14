@@ -1,6 +1,4 @@
 export enum RoutesConstants {
-    TRANSACTIONS = 'transactions',
-    VALIDATE_PAGE = 'validate',
-    HOME = '/',
-    BLOCKTRANSACTIONS = 'blckTransactions',
+    HOME_PAGE = '/',
+    BLOCK_TRANSACTIONS = '/blockTransactions/',
 }

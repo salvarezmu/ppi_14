@@ -17,6 +17,8 @@ import {
 
 // Importa los estilos desde el archivo CSS
 import './TransaccionesEnBloque.css';
+import SideBarComponent from "../../components/sidebar/SideBarComponent";
+import CollaboratorsComponent from "../../components/collaborators/CollaboratorsComponent";
 
 const TransaccionesEnBloque: React.FC = () => {
   const theme = useTheme();
@@ -54,52 +56,56 @@ const TransaccionesEnBloque: React.FC = () => {
   };
 
   return (
-    <Box m={2} p={2} className="container"> {/* Aplica la clase de contenedor desde el archivo CSS */}
-      <Typography variant="h5" gutterBottom>
-        Obtener Transacciones en un Bloque
-      </Typography>
-      <TextField
-        label="Número de Bloque"
-        variant="outlined"
-        value={blockNumber}
-        onChange={(e) => setBlockNumber(e.target.value)}
-      />
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={obtenerTransaccionesEnBloque}
-        style={{ marginTop: '16px' }}
-      >
-        Obtener Transacciones
-      </Button>
-      <Box mt={2}>
-        {error && <Typography variant="h6" color="error">{error}</Typography>}
-        {transactions.length > 0 && (
-          <TableContainer component={Paper} style={{ marginTop: '16px' }}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>ID de Transacción</TableCell>
-                  <TableCell>Contrato</TableCell>
-                  <TableCell>Timestamp del Bloque</TableCell>
-                  <TableCell>Costo (USD)</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {transactions.map((transaction, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{transaction.id}</TableCell>
-                    <TableCell>{transaction.contract_address}</TableCell>
-                    <TableCell>{new Date(transaction.blockTimeStamp).toLocaleString()}</TableCell>
-                    <TableCell>${convertirCostoADolares(transaction.fee / 1e6)}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        )}
-      </Box>
-    </Box>
+      <div className={"transactions-page-father"}>
+        <SideBarComponent></SideBarComponent>
+        <div  className="container"> {/* Aplica la clase de contenedor desde el archivo CSS */}
+          <Typography variant="h5" gutterBottom>
+            Obtener Transacciones en un Bloque
+          </Typography>
+          <TextField
+              label="Número de Bloque"
+              variant="outlined"
+              value={blockNumber}
+              onChange={(e) => setBlockNumber(e.target.value)}
+          />
+          <Button
+              variant="contained"
+              color="primary"
+              onClick={obtenerTransaccionesEnBloque}
+              style={{ marginTop: '16px' }}
+          >
+            Obtener Transacciones
+          </Button>
+          <div >
+            {error && <Typography variant="h6" color="error">{error}</Typography>}
+            {transactions.length > 0 && (
+                <TableContainer component={Paper} style={{ marginTop: '16px' }}>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>ID de Transacción</TableCell>
+                        <TableCell>Contrato</TableCell>
+                        <TableCell>Timestamp del Bloque</TableCell>
+                        <TableCell>Costo (USD)</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {transactions.map((transaction, index) => (
+                          <TableRow key={index}>
+                            <TableCell>{transaction.id}</TableCell>
+                            <TableCell>{transaction.contract_address}</TableCell>
+                            <TableCell>{new Date(transaction.blockTimeStamp).toLocaleString()}</TableCell>
+                            <TableCell>${convertirCostoADolares(transaction.fee / 1e6)}</TableCell>
+                          </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+            )}
+          </div>
+        </div>
+        <CollaboratorsComponent></CollaboratorsComponent>
+      </div>
   );
 };
 

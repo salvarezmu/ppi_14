@@ -2,7 +2,7 @@ import axios, {AxiosRequestConfig, AxiosResponse} from 'axios';
 
 export class AxiosUtils {
 
-    public static async get<T>(url: string, baseURL = process.env.REACT_APP_BASE_URL): Promise<T | void> {
+    public static async get<T>(url: string, baseURL = process.env.REACT_APP_BASE_URL): Promise<T> {
         try {
             const config: AxiosRequestConfig = {baseURL};
             const data: AxiosResponse = await axios.get(url, config);
@@ -11,6 +11,7 @@ export class AxiosUtils {
         } catch (e) {
             // TODO: Define what happens when there is an error
             console.error(e);
+            throw e;
         }
     }
 
@@ -20,5 +21,5 @@ export class AxiosUtils {
             throw Error('FAIL GETTING BACKEND');
         }
     }
-    
+
 }
