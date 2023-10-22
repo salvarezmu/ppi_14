@@ -1,10 +1,8 @@
-from rest_framework import viewsets
-from django.http import JsonResponse
-from .serializer import UserSerializer
-from .models import User
+import json
+from django.views.decorators.http import require_http_methods
 
 
-
-class UserView(viewsets.ModelViewSet):
-    serializer_class = UserSerializer
-    queryset = User.objects.all()
+@require_http_methods(['POST'])
+def register(request):
+    body = json.loads(request.body)
+    print(body)

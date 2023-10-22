@@ -3,10 +3,8 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
-import Transactions from './pages/transactions/transactions';
 import {RoutesConstants} from './constants/RoutesConstants';
-import ValidateAddress from './pages/validateAdress-page/validate_page';
-import Home from './pages/home/home';
+import HomePage from "./pages/home/HomePage";
 import TransaccionesEnBloque from './pages/blockTransactions/transaccionesEnBloque';
 
 const root = ReactDOM.createRoot(
@@ -16,11 +14,8 @@ root.render(
     <React.StrictMode>
         <BrowserRouter>
             <Routes>
-                <Route path={RoutesConstants.TRANSACTIONS} element={<Transactions/>}></Route>
-                <Route path={RoutesConstants.VALIDATE_PAGE} element={<ValidateAddress/>}></Route>
-                <Route path={RoutesConstants.BLOCKTRANSACTIONS} element={<TransaccionesEnBloque/>}></Route>
-                <Route path={RoutesConstants.HOME} element={<Home/>}></Route>
-
+                <Route path={RoutesConstants.BLOCK_TRANSACTIONS} element={<TransaccionesEnBloque/>}></Route>
+                <Route path={RoutesConstants.HOME_PAGE} element={<HomePage/>}></Route>
             </Routes>
         </BrowserRouter>
     </React.StrictMode>

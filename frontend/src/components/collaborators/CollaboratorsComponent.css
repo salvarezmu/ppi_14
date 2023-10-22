@@ -1,0 +1,28 @@
+.collaborators-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    grid-column: 2/3;
+}
+
+.collaborator {
+    font-weight: bold;
+    display: flex;
+    flex-flow: column;
+    justify-content: space-around;
+    align-items: center;
+    font-size: 12px;
+    margin: 0 10px 0 10px;
+}
+
+.collaborator-image {
+    height: 50px;
+    border-radius: 50%;
+    padding: 0 5px 0 5px;
+}
+p{
+    padding: 0;
+    margin: 0;
+}
