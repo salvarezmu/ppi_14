@@ -15,6 +15,10 @@ export class SideBarComponent extends React.Component {
         {
             name: ModuleNamesConstants.HOME,
             to: RoutesConstants.HOME_PAGE
+        },
+        {
+            name: ModuleNamesConstants.BLOCK_TRANSACTIONS,
+            to: RoutesConstants.BLOCK_TRANSACTIONS,
         }
     ]
 
@@ -24,6 +28,7 @@ export class SideBarComponent extends React.Component {
                 <h1 className={"sidebar-tittle"}>TRON Pulse</h1>
                 {
                     this.modules.map(m => {
+                        console.log(m, window.location.pathname);
                         const button_class = m.to === window.location.pathname ? 'current-sidebar-button' : 'sidebar-button';
                         return (
                             <Link to={m.to} key={m.name} className={"sidebar-button-container"}>
