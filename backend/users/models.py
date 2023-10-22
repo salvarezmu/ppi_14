@@ -5,3 +5,4 @@ class User(models.Model):
     name = models.TextField()
     email = models.TextField()
     password = models.CharField(max_length=64)
+    default_address = models.TextField()

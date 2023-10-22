@@ -1,3 +1,5 @@
 export enum BackendConstants {
-    TEST_DJANGO = '/api/v1/users/',
+    VALIDATE_ADDRESS = 'api/v1/tronapi/validate-address/',
+    GET_TRX_BALANCE = 'api/v1/tronapi/trx/get-balance/',
+    GET_TRX_TRANSACTIONS = 'api/v1/tronapi/trx/get-transactions/'
 }

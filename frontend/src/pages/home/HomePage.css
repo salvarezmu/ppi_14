@@ -1,0 +1,43 @@
+.home-page-father {
+    width: 100%;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 15% 85%;
+    grid-template-rows: 88% 12%;
+}
+
+.home-page-container {
+    grid-row: 1/2;
+    height: 100%;
+    display: grid;
+    grid-template-rows: 13% 87%;
+
+}
+
+#home-page-table {
+    height: 100%;
+    max-width: 100%;
+}
+
+#home-page-header {
+    display: grid;
+    grid-template-columns: 80% 20%;
+    width: 100%;
+}
+
+#home-page-header-info {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    padding-left: 10px;
+
+    #set-address-input {
+        height: 55%;
+        width: 50%;
+    }
+}
+
+#home-page-header-balance {
+    display: flex;
+    align-items: center;
+}
