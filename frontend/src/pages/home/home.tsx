@@ -12,6 +12,9 @@ const Home = () => {
           <Link to={RoutesConstants.VALIDATE_PAGE}>
             <button>Validar dirección</button>
           </Link>
+          <Link to={RoutesConstants.BLOCKTRANSACTIONS}>
+            <button>Transacciones bloque</button>
+          </Link>
         </div>
       );
     };

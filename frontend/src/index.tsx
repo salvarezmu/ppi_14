@@ -7,6 +7,7 @@ import Transactions from './pages/transactions/transactions';
 import {RoutesConstants} from './constants/RoutesConstants';
 import ValidateAddress from './pages/validateAdress-page/validate_page';
 import Home from './pages/home/home';
+import TransaccionesEnBloque from './pages/blockTransactions/transaccionesEnBloque';
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
@@ -17,7 +18,9 @@ root.render(
             <Routes>
                 <Route path={RoutesConstants.TRANSACTIONS} element={<Transactions/>}></Route>
                 <Route path={RoutesConstants.VALIDATE_PAGE} element={<ValidateAddress/>}></Route>
+                <Route path={RoutesConstants.BLOCKTRANSACTIONS} element={<TransaccionesEnBloque/>}></Route>
                 <Route path={RoutesConstants.HOME} element={<Home/>}></Route>
+
             </Routes>
         </BrowserRouter>
     </React.StrictMode>
