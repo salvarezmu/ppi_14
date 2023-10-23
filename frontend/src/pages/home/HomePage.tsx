@@ -14,13 +14,16 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
+import {ErrorsConstants} from "../../constants/ErrorsConstants";
+import {GenericUtils} from "../../utils/GenericUtils";
 
 
 interface State {
     loading: boolean;
     balance: number;
+    USDBalance: number;
     symbol: string;
-    current_address: string;
+    currentAddress: string;
     transactions: TRXTransactions;
     columnNames: Array<string>;
 }
@@ -31,8 +34,9 @@ class HomePage extends React.Component<unknown, State> {
         this.state = {
             loading: false,
             balance: -1,
+            USDBalance: -1,
             symbol: CoinSymbolConstants.TRX,
-            current_address: '',
+            currentAddress: '',
             transactions: [],
             columnNames: ['TxID', 'Valor', 'Fecha', 'Desde', 'Hacia', 'Tipo'],
         }
@@ -40,48 +44,67 @@ class HomePage extends React.Component<unknown, State> {
 
     showBalance = () => {
         const balance = this.state.balance;
+        const usdBalance = this.state.USDBalance;
         if (balance >= 0) {
-            return (<div id={"home-page-header-balance"}>Balance: {`${balance} ${this.state.symbol}`}</div>);
+            return (<div id={"home-page-header-balance"}>
+                <p>Balance: {`${balance} ${this.state.symbol}`}</p>
+                {usdBalance >= 0 ? <p>USD: {usdBalance.toFixed(3)} $</p> : <></>}
+            </div>);
         }
     }
 
-    getBalance = async (address: string): Promise<number> => {
+    getBalances = async (address: string, requiresUSD = false, token: string | null = null): Promise<{
+        balance: number,
+        USDBalance: number
+    }> => {
         const baseUrl: string = `${BackendConstants.GET_TRX_BALANCE}${address}`;
-        const balanceData: GetTRXBalanceRes = await AxiosUtils.get<GetTRXBalanceRes>(baseUrl);
-        return balanceData.data.balance;
+        const balanceData: GetTRXBalanceRes = await AxiosUtils.get<GetTRXBalanceRes>(baseUrl, undefined, {
+            requiresUSD,
+            token
+        });
+        return {balance: balanceData.data.balance, USDBalance: balanceData.data.USDBalance || -1};
     }
 
-    getTransactions = async (address: string): Promise<TRXTransactions> => {
+    getTransactions = async (address: string, requiresUSD = false, token: string | null = null): Promise<TRXTransactions> => {
         const baseUrl: string = `${BackendConstants.GET_TRX_TRANSACTIONS}${address}`;
-        const transactionsData: GetTRXTransactionsRes = await AxiosUtils.get<GetTRXTransactionsRes>(baseUrl);
+        const transactionsData: GetTRXTransactionsRes = await AxiosUtils.get<GetTRXTransactionsRes>(baseUrl, undefined, {
+            requiresUSD,
+            token
+        });
         return transactionsData.data;
     }
 
-    setData = async (e: any) => {
+    getDataClickEvent = async (e: any) => {
         e.preventDefault();
         if (e.keyCode === 13 && e.target.value !== '') {
-            this.setState({loading: true});
-            const baseUrl: string = `${BackendConstants.VALIDATE_ADDRESS}${e.target.value}`;
-            const isValidData: ValidateAddressRes = await AxiosUtils.get<ValidateAddressRes>(baseUrl);
-            if (!isValidData.data.isValid) {
-                this.setState({loading: false});
-                window.alert('La address es invalida.');
-                return;
-            }
-            const address: string = e.target.value;
-            const balance = await this.getBalance(address);
-            const transactions = await this.getTransactions(address);
-            this.setState({current_address: address, balance, transactions, loading: false});
+            const login = GenericUtils.resolveLogin()
+            const token = login.isLogged ? login.access_token : null;
+            await this.getData(e.target.value, login.isLogged, token);
             const element: any = document.getElementById("set-address-input");
             element && (element.value = '');
         }
+    }
+
+    getData = async (addressParam: string, requiresUSD = false, token: string | null = null) => {
+        this.setState({loading: true});
+        const baseUrl: string = `${BackendConstants.VALIDATE_ADDRESS}${addressParam}`;
+        const isValidData: ValidateAddressRes = await AxiosUtils.get<ValidateAddressRes>(baseUrl, undefined);
+        if (!isValidData.data.isValid) {
+            this.setState({loading: false});
+            window.alert(ErrorsConstants.INVALID_ADDRESS_ERROR);
+            return;
+        }
+        const address: string = addressParam;
+        const {balance, USDBalance} = await this.getBalances(address, requiresUSD, token);
+        const transactions = await this.getTransactions(address, requiresUSD, token);
+        this.setState({currentAddress: address, balance, USDBalance, transactions, loading: false});
     }
 
     copyOnClipboard = async (e: any) => {
         await navigator.clipboard.writeText(e.target.innerText);
     }
 
-    buildTable = () => {
+    buildTable = (isLogged: boolean) => {
         return (
             <TableContainer id={"home-page-table"} component={Paper}>
                 <Table sx={{minWidth: 650}} aria-label="simple table">
@@ -98,10 +121,12 @@ class HomePage extends React.Component<unknown, State> {
                                 <TableCell style={{maxWidth: 200, overflow: 'hidden', cursor: 'copy'}}
                                            align="left" onClick={this.copyOnClipboard}>{row[0]}</TableCell>
                                 <TableCell align="left">{`${row[1]} ${row[5]}`}</TableCell>
+                                {isLogged ? <TableCell align="left">{`${row[7].toFixed(3)} $`}</TableCell>
+                                    : <></>}
                                 <TableCell align="left">{new Date(row[2]).toLocaleDateString()}</TableCell>
-                                <TableCell style={{cursor: 'copy'}} align="left"
+                                <TableCell style={{cursor: 'copy', maxWidth: 180, overflow: 'hidden'}} align="left"
                                            onClick={this.copyOnClipboard}>{row[3]}</TableCell>
-                                <TableCell style={{cursor: 'copy'}} align="left"
+                                <TableCell style={{cursor: 'copy', maxWidth: 180, overflow: 'hidden'}} align="left"
                                            onClick={this.copyOnClipboard}>{row[4]}</TableCell>
                                 <TableCell align="left">{row[6]}</TableCell>
                             </TableRow>
@@ -113,6 +138,14 @@ class HomePage extends React.Component<unknown, State> {
     }
 
     render() {
+        const login = GenericUtils.resolveLogin()
+        if (login.isLogged && login.user && !this.state.currentAddress) {
+            this.setState({
+                currentAddress: login.user.default_address,
+                columnNames: ['TxID', 'Valor', 'USD', 'Fecha', 'Desde', 'Hacia', 'Tipo']
+            });
+            this.getData(login.user.default_address, true, login.access_token);
+        }
         return (
             <div className={"home-page-father"}>
                 <SideBarComponent>
@@ -121,12 +154,12 @@ class HomePage extends React.Component<unknown, State> {
                     <div id={"home-page-header"}>
                         <div id={"home-page-header-info"}>
                             <input id={"set-address-input"} type={"text"} placeholder={"TQNrERHKZEXg..."}
-                                   title={"Preciona la tecla Enter para buscar."} onKeyUp={this.setData}/>
-                            <small>Dirección actual: {this.state.current_address}</small>
+                                   title={"Preciona la tecla Enter para buscar."} onKeyUp={this.getDataClickEvent}/>
+                            <small>Dirección actual: {this.state.currentAddress}</small>
                         </div>
                         {this.showBalance()}
                     </div>
-                    {this.buildTable()}
+                    {this.buildTable(login.isLogged)}
                 </div>
                 <CollaboratorsComponent>
                 </CollaboratorsComponent>
@@ -137,8 +170,7 @@ class HomePage extends React.Component<unknown, State> {
                     <CircularProgress color="inherit"/>
                 </Backdrop>
             </div>
-        )
-            ;
+        );
     }
 }
 
