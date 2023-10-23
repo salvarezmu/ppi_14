@@ -6,6 +6,8 @@ import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import {RoutesConstants} from './constants/RoutesConstants';
 import HomePage from "./pages/home/HomePage";
 import TransaccionesEnBloque from './pages/blockTransactions/transaccionesEnBloque';
+import RegisterPage from "./pages/register/RegisterPage";
+import LoginPage from "./pages/login/LoginPage";
 import HistoryBlock from './pages/blockHistory/blockHistory';
 
 const root = ReactDOM.createRoot(
@@ -16,7 +18,6 @@ root.render(
     <React.StrictMode>
         <BrowserRouter>
             <Routes>
-                <Route path={RoutesConstants.HISTORY_BLOCKS} element={<HistoryBlock/>}></Route>
                 <Route path={RoutesConstants.BLOCK_TRANSACTIONS} element={<TransaccionesEnBloque/>}></Route>
                 <Route path={RoutesConstants.HOME_PAGE} element={<HomePage/>}></Route>
             </Routes>
