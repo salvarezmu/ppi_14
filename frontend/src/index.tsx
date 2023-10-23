@@ -18,6 +18,9 @@ root.render(
     <React.StrictMode>
         <BrowserRouter>
             <Routes>
+                <Route path={RoutesConstants.LOGIN} element={<LoginPage/>}></Route>
+                <Route path={RoutesConstants.REGISTER} element={<RegisterPage/>}></Route>
+                <Route path={RoutesConstants.HISTORY_BLOCKS} element={<HistoryBlock/>}></Route>
                 <Route path={RoutesConstants.BLOCK_TRANSACTIONS} element={<TransaccionesEnBloque/>}></Route>
                 <Route path={RoutesConstants.HOME_PAGE} element={<HomePage/>}></Route>
             </Routes>
