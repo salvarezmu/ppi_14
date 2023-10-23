@@ -16,6 +16,12 @@ import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
 import {ErrorsConstants} from "../../constants/ErrorsConstants";
 import {GenericUtils} from "../../utils/GenericUtils";
+import {
+    mean, // Promedio
+    median, // Mediana
+    max, // Máximo
+    min, // Mínimo
+  } from "simple-statistics";
 
 interface State {
     loading: boolean;
@@ -107,6 +113,41 @@ class HomePage extends React.Component<unknown, State> {
         await navigator.clipboard.writeText(e.target.innerText);
     }
 
+    buildStatistics =  (filteredTransactions: TRXTransactions) => {
+        if (filteredTransactions.length > 0) {
+            let sum = 0;
+
+            for (const item of filteredTransactions) {
+              const value = item[1];
+              const direction = item[6];
+          
+              if (direction === "Entrada") {
+                sum += value; // Sumar si la dirección es "Entrada"
+              } else if (direction === "Salida") {
+                sum -= value; // Restar si la dirección es "Salida"
+              }
+            }
+            const values = filteredTransactions.map(transaction => transaction[1]);
+            const average = mean(values);
+            const med = median(values);
+            const maximum = max(values);
+            const minimum = min(values);
+            return (
+                <div>
+                <p>Promedio: {`${average.toFixed(4)}`}</p>
+                <p>Mediana: {`${med.toFixed(4)}`}</p>
+                <p>Max: {`${maximum.toFixed(4)}`}</p>
+                <p>Min: {`${minimum.toFixed(4)}`}</p>
+                <p>Suma: {`${sum.toFixed(4)}`}</p>
+                </div>
+            )
+        }
+
+
+
+
+    }
+
     buildTable = (filteredTransactions: TRXTransactions, isLogged: boolean) => {
         return (
             <TableContainer id={"home-page-table"} component={Paper}>
@@ -160,6 +201,7 @@ class HomePage extends React.Component<unknown, State> {
             }
             return false;
         });
+        console.log(filteredTransactions);
         return filteredTransactions;
     }
 
@@ -199,7 +241,13 @@ class HomePage extends React.Component<unknown, State> {
                         </div>
                         {this.showBalance()}
                     </div>
+                    <div>
                     {this.buildTable(this.filterTransactions(), login.isLogged)}
+                    {this.buildStatistics(this.filterTransactions())}
+                    </div>
+                    
+                    
+                    
                 </div>
                 <CollaboratorsComponent>
                 </CollaboratorsComponent>
