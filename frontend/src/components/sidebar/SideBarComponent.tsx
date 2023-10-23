@@ -54,7 +54,7 @@ export class SideBarComponent extends React.Component {
                                 <Button variant="contained">Login</Button>
                             </Link>
                             <Link to={RoutesConstants.REGISTER} className={"auth-buttons"}>
-                                <Button variant="contained">Sign in</Button>
+                                <Button variant="contained">Sign up</Button>
                             </Link>
                         </>
                         :
