@@ -2,24 +2,23 @@ import axios, {AxiosRequestConfig, AxiosResponse} from 'axios';
 
 export class AxiosUtils {
 
-    public static async get<T>(url: string, baseURL = process.env.REACT_APP_BASE_URL): Promise<T> {
-        try {
-            const config: AxiosRequestConfig = {baseURL};
-            const data: AxiosResponse = await axios.get(url, config);
-            this.validateData(data);
-            return data.data;
-        } catch (e) {
-            // TODO: Define what happens when there is an error
-            console.error(e);
-            throw e;
-        }
+    public static async get<T>(url: string, baseURL = process.env.REACT_APP_BASE_URL, params?: Record<string, unknown>): Promise<T> {
+        const config: AxiosRequestConfig = {baseURL, params};
+        const data: AxiosResponse = await axios.get(url, config);
+        this.validateData(data);
+        return data.data;
+    }
+
+    public static async post<T>(url: string, body: Record<string, unknown>, baseURL = process.env.REACT_APP_BASE_URL): Promise<T> {
+        const config: AxiosRequestConfig = {baseURL};
+        const data: AxiosResponse = await axios.post(url, body, config);
+        this.validateData(data);
+        return data.data;
     }
 
     private static validateData(data: AxiosResponse): void {
         if (!data || !data.data) {
-            // TODO: Switch to a constants file
             throw Error('FAIL GETTING BACKEND');
         }
     }
-
 }
