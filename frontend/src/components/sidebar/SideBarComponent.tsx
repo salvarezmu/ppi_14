@@ -21,6 +21,10 @@ export class SideBarComponent extends React.Component {
         {
             name: ModuleNamesConstants.BLOCK_TRANSACTIONS,
             to: RoutesConstants.BLOCK_TRANSACTIONS,
+        },
+        {
+            name: ModuleNamesConstants.HISTORY_BLOCKS,
+            to: RoutesConstants.HISTORY_BLOCKS,
         }
     ]
 

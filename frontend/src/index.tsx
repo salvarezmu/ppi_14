@@ -8,16 +8,19 @@ import HomePage from "./pages/home/HomePage";
 import TransaccionesEnBloque from './pages/blockTransactions/transaccionesEnBloque';
 import RegisterPage from "./pages/register/RegisterPage";
 import LoginPage from "./pages/login/LoginPage";
+import HistoryBlock from './pages/blockHistory/blockHistory';
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
 );
+
 root.render(
     <React.StrictMode>
         <BrowserRouter>
             <Routes>
                 <Route path={RoutesConstants.LOGIN} element={<LoginPage/>}></Route>
                 <Route path={RoutesConstants.REGISTER} element={<RegisterPage/>}></Route>
+                <Route path={RoutesConstants.HISTORY_BLOCKS} element={<HistoryBlock/>}></Route>
                 <Route path={RoutesConstants.BLOCK_TRANSACTIONS} element={<TransaccionesEnBloque/>}></Route>
                 <Route path={RoutesConstants.HOME_PAGE} element={<HomePage/>}></Route>
             </Routes>
