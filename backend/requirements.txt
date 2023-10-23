@@ -18,3 +18,4 @@ numpy==1.26.1
 pandas==2.1.1
 base58==2.1.1
 djangorestframework-simplejwt==5.3.0
+gunicorn==21.2.0
