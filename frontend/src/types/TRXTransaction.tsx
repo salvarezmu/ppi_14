@@ -9,4 +9,4 @@
 
 export type TRXTransactions = Array<TRXTransaction>;
 
-export type TRXTransaction = [string, number, number, string, string, string, string];
+export type TRXTransaction = [string, number, number, string, string, string, string, number];
