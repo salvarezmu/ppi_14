@@ -17,7 +17,6 @@ import TableBody from "@mui/material/TableBody";
 import {ErrorsConstants} from "../../constants/ErrorsConstants";
 import {GenericUtils} from "../../utils/GenericUtils";
 
-
 interface State {
     loading: boolean;
     balance: number;
@@ -26,6 +25,8 @@ interface State {
     currentAddress: string;
     transactions: TRXTransactions;
     columnNames: Array<string>;
+    startDate: string;
+    endDate: string;
 }
 
 class HomePage extends React.Component<unknown, State> {
@@ -39,6 +40,8 @@ class HomePage extends React.Component<unknown, State> {
             currentAddress: '',
             transactions: [],
             columnNames: ['TxID', 'Valor', 'Fecha', 'Desde', 'Hacia', 'Tipo'],
+            startDate: '',
+            endDate: '',
         }
     }
 
@@ -104,7 +107,7 @@ class HomePage extends React.Component<unknown, State> {
         await navigator.clipboard.writeText(e.target.innerText);
     }
 
-    buildTable = (isLogged: boolean) => {
+    buildTable = (filteredTransactions: TRXTransactions, isLogged: boolean) => {
         return (
             <TableContainer id={"home-page-table"} component={Paper}>
                 <Table sx={{minWidth: 650}} aria-label="simple table">
@@ -116,7 +119,7 @@ class HomePage extends React.Component<unknown, State> {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {this.state.transactions.map((row) => (
+                        {filteredTransactions.map((row) => (
                             <TableRow key={row[0]} sx={{'&:last-child td, &:last-child th': {border: 0}}}>
                                 <TableCell style={{maxWidth: 200, overflow: 'hidden', cursor: 'copy'}}
                                            align="left" onClick={this.copyOnClipboard}>{row[0]}</TableCell>
@@ -135,6 +138,29 @@ class HomePage extends React.Component<unknown, State> {
                 </Table>
             </TableContainer>
         );
+    }
+
+    handleStartDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({startDate: e.target.value});
+    }
+
+    handleEndDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({endDate: e.target.value});
+    }
+
+    filterTransactions = () => {
+        const {startDate, endDate} = this.state;
+        const filteredTransactions = this.state.transactions.filter((transaction) => {
+            const transactionDate = new Date(transaction[2]);
+            if (
+                (!startDate || transactionDate >= new Date(startDate)) &&
+                (!endDate || transactionDate <= new Date(endDate))
+            ) {
+                return true;
+            }
+            return false;
+        });
+        return filteredTransactions;
     }
 
     render() {
@@ -156,10 +182,24 @@ class HomePage extends React.Component<unknown, State> {
                             <input id={"set-address-input"} type={"text"} placeholder={"TQNrERHKZEXg..."}
                                    title={"Preciona la tecla Enter para buscar."} onKeyUp={this.getDataClickEvent}/>
                             <small>Dirección actual: {this.state.currentAddress}</small>
+                            <div>
+                                <input
+                                    type="date"
+                                    placeholder="Fecha de inicio"
+                                    value={this.state.startDate}
+                                    onChange={this.handleStartDateChange}
+                                />
+                                <input
+                                    type="date"
+                                    placeholder="Fecha de fin"
+                                    value={this.state.endDate}
+                                    onChange={this.handleEndDateChange}
+                                />
+                            </div>
                         </div>
                         {this.showBalance()}
                     </div>
-                    {this.buildTable(login.isLogged)}
+                    {this.buildTable(this.filterTransactions(), login.isLogged)}
                 </div>
                 <CollaboratorsComponent>
                 </CollaboratorsComponent>
@@ -174,4 +214,4 @@ class HomePage extends React.Component<unknown, State> {
     }
 }
 
-export default HomePage
+export default HomePage;
