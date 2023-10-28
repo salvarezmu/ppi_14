@@ -81,19 +81,17 @@ const TrxTransactionsPage = () => {
     }
 
     const getData = async (addressParam: string, requiresUSD = false, token: string | null = null) => {
-        setLoading(true);
         const address: string = addressParam;
         if (!GenericUtils.validateAddress(addressParam)) {
             window.alert(ErrorsConstants.INVALID_ADDRESS_ERROR);
             return;
         }
+        setLoading(true);
         let initTimestamp, finalTimestamp;
         if (startDate) initTimestamp = new Date(startDate).valueOf();
         if (endDate) finalTimestamp = new Date(endDate).valueOf();
-        console.log(startDate, endDate);
         const {balance, USDBalance} = await getBalances(address, requiresUSD, token);
         const transactions = await getTransactions(address, requiresUSD, token, initTimestamp, finalTimestamp);
-        console.log(transactions);
         setCurrentAddress(address);
         setBalance(balance);
         setUSDBalance(USDBalance);
