@@ -8,3 +8,5 @@ class TronApiConstants(Enum):
     GET_BALANCE_URL = 'https://api.shasta.trongrid.io/v1/accounts/${address}'
     GET_TRANSACTIONS_URL = 'https://api.shasta.trongrid.io/v1/accounts/${address}/transactions'
     VALIDATE_ADDRESS_URL = 'https://api.shasta.trongrid.io/wallet/validateaddress'
+    GET_BLOCK_HISTORY_URL = 'https://api.shasta.trongrid.io/walletsolidity/getblockbylatestnum'
+    GET_BLOCK_TRANSACTIONS_URL = 'https://api.shasta.trongrid.io/walletsolidity/gettransactioninfobyblocknum'

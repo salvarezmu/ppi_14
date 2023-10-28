@@ -8,7 +8,6 @@ from users.authentication import authenticate
 from .constants import TronApiConstants
 from .utils import TronApiUtils
 from core.utils import ApiUtils
-from core.constants import ApiConstants
 
 
 def validate_address_util(address) -> bool:
@@ -42,8 +41,6 @@ def validate_address(req, address):
 
 @api_view(["GET"])
 def get_trx_balance(req, address):
-    if not validate_address_util(address):
-        return ApiUtils.build_bad_request_response(ApiConstants.INVALID_ADDRESS_ERROR)
     balance = get_trx_balance_util(address)
     response = {'balance': balance}
     if req.GET.get('requiresUSD') == 'true':
@@ -57,19 +54,76 @@ def get_trx_balance(req, address):
 
 @api_view(["GET"])
 def get_trx_transactions(req, address):
-    if not validate_address_util(address):
-        return ApiUtils.build_bad_request_response(ApiConstants.INVALID_ADDRESS_ERROR)
-
     url = TronApiConstants.GET_TRANSACTIONS_URL.value.replace(TronApiConstants.REPLACE_ADDRESS_PARAM.value, address)
-    data = TronApiUtils.map_get_trx_transactions_response(requests.get(url).json()['data'])
-    data['amount'] = data['amount'] / TronApiConstants.SUN_TO_TRX.value
-    data['from'] = TronApiUtils.hex_address_to_base58(data['from'])
-    data['to'] = TronApiUtils.hex_address_to_base58(data['to'])
-    data['type'] = np.where(data['to'] == address, 'Entrada', 'Salida')
+    params = {}
+
+    if req.GET.get('startTimestamp'):
+        params['min_timestamp'] = req.GET.get('startTimestamp')
+
+    if req.GET.get('finalTimestamp'):
+        params['max_timestamp'] = req.GET.get('finalTimestamp')
+
+    transactions = []
+    statistics = {
+        'average': 0,
+        'med': 0,
+        'maximum': 0,
+        'minimum': 0,
+        'sum': 0,
+    }
+
+    raw_response = requests.get(url, params=params).json()['data']
+    if raw_response:
+        data = TronApiUtils.map_get_trx_transactions_response(raw_response)
+        data['amount'] = data['amount'] / TronApiConstants.SUN_TO_TRX.value
+        data['from'] = TronApiUtils.hex_address_to_base58(data['from'])
+        data['to'] = TronApiUtils.hex_address_to_base58(data['to'])
+        data['type'] = np.where(data['to'] == address, 'Entrada', 'Salida')
+
+        inputs = data.loc[data['type'] == 'Entrada', 'amount'].sum()
+        outputs = data.loc[data['type'] == 'Salida', 'amount'].sum()
+
+        statistics['average'] = data['amount'].mean()
+        statistics['med'] = data['amount'].median()
+        statistics['maximum'] = data['amount'].max()
+        statistics['minimum'] = data['amount'].min()
+        statistics['sum'] = inputs - outputs
+
+        if req.GET.get('requiresUSD') == 'true':
+            if not authenticate(req.GET.get('token')):
+                return ApiUtils.build_unauthorized_response()
+            trm = get_trm('TRX')
+            data['USDAmount'] = data['amount'] * trm
+        transactions = data.values.tolist()
+    return ApiUtils.build_generic_response({'transactions': transactions, 'statistics': statistics})
+
+
+@api_view(["GET"])
+def get_history_blocks(req, quantity: int):
+    url = TronApiConstants.GET_BLOCK_HISTORY_URL.value
+    params = {'num': quantity}
+    raw_data = requests.get(url, params=params).json()
+    blocks = []
+    try:
+        data = TronApiUtils.map_get_block_history_response(raw_data['block'])
+        blocks = data.values.tolist()[::-1]
+    except:
+        pass
+    return ApiUtils.build_generic_response({'blocks': blocks})
+
+
+@api_view(["GET"])
+def get_block_transactions(req, block: int):
+    url = TronApiConstants.GET_BLOCK_TRANSACTIONS_URL.value
+    params = {'num': block}
+    raw_data = requests.get(url, params=params).json()
+    data = TronApiUtils.map_get_block_transactions(raw_data)
+    data['minerFee'] = data['minerFee'] / TronApiConstants.SUN_TO_TRX.value
 
     if req.GET.get('requiresUSD') == 'true':
         if not authenticate(req.GET.get('token')):
             return ApiUtils.build_unauthorized_response()
         trm = get_trm('TRX')
-        data['USDAmount'] = data['amount'] * trm
-    return ApiUtils.build_generic_response(data.values.tolist())
+        data['USDMinerFee'] = data['minerFee'] * trm
+
+    return ApiUtils.build_generic_response({'transactions': data.values.tolist()})

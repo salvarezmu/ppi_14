@@ -23,3 +23,33 @@ class TronApiUtils:
                     'TRX',
                 ])
         return pd.DataFrame(data=mapped, columns=['txID', 'amount', 'timestamp', 'from', 'to', 'symbol'])
+
+    @staticmethod
+    def map_get_block_history_response(blocks):
+        mapped = []
+        for block in blocks:
+            raw_data = block['block_header']['raw_data']
+            quantity = 0
+            try:
+                quantity = len(block['transactions'])
+            except:
+                pass
+
+            mapped.append([
+                block['blockID'],
+                raw_data['number'],
+                raw_data['timestamp'],
+                quantity,
+            ])
+        return pd.DataFrame(data=mapped, columns=['blockID', 'number', 'timestamp', 'transactions_number'])
+
+    @staticmethod
+    def map_get_block_transactions(data):
+        mapped = []
+        for transaction in data:
+            mapped.append([
+                transaction['id'],
+                transaction['fee'],
+                transaction['blockTimeStamp']
+            ])
+        return pd.DataFrame(data=mapped, columns=['txID', 'minerFee', 'timestamp'])

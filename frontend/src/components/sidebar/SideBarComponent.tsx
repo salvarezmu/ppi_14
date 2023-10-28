@@ -16,16 +16,21 @@ export class SideBarComponent extends React.Component {
     private readonly modules: Array<Module> = [
         {
             name: ModuleNamesConstants.HOME,
-            to: RoutesConstants.HOME_PAGE
+            to: RoutesConstants.HOME,
+        },
+        {
+            name: ModuleNamesConstants.TRANSACTIONS,
+            to: RoutesConstants.TRX_TRANSACTIONS
+        },
+        {
+            name: ModuleNamesConstants.BLOCK_HISTORY,
+            to: RoutesConstants.BLOCK_HISTORY,
         },
         {
             name: ModuleNamesConstants.BLOCK_TRANSACTIONS,
             to: RoutesConstants.BLOCK_TRANSACTIONS,
         },
-        {
-            name: ModuleNamesConstants.HISTORY_BLOCKS,
-            to: RoutesConstants.HISTORY_BLOCKS,
-        }
+
     ]
 
     logout = (e: any) => {
@@ -43,10 +48,10 @@ export class SideBarComponent extends React.Component {
                 <div>
                     {
                         this.modules.map(m => {
-                            const button_class = m.to === window.location.pathname ? 'current-sidebar-button' : 'sidebar-button';
+                            const button_variant = m.to === window.location.pathname ? 'contained' : 'outlined';
                             return (
                                 <Link to={m.to} key={m.name} className={"sidebar-button-container"}>
-                                    <input type={"button"} className={button_class} value={m.name}/>
+                                    <Button variant={button_variant} className={'sidebar-button'}>{m.name}</Button>
                                 </Link>
                             )
                         })
