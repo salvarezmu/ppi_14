@@ -97,7 +97,7 @@ class RegisterPage extends React.Component<unknown, State> {
                 >
                     <CircularProgress color="inherit"/>
                 </Backdrop>
-                {this.state.redirect && (<Navigate to={RoutesConstants.HOME_PAGE}/>)}
+                {this.state.redirect && (<Navigate to={RoutesConstants.HOME}/>)}
             </div>);
     }
 }

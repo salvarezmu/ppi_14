@@ -1,7 +1,8 @@
 export enum RoutesConstants {
-    HOME_PAGE = '/',
+    HOME = '/',
+    TRX_TRANSACTIONS = '/trxTransactions/',
     BLOCK_TRANSACTIONS = '/blockTransactions/',
-    HISTORY_BLOCKS = '/blockHistory/',
+    BLOCK_HISTORY = '/blockHistory/',
     REGISTER = '/register/',
     LOGIN = '/login/',
 }

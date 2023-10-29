@@ -26,26 +26,9 @@
     text-decoration-line: none;
 }
 
-.sidebar-button, .current-sidebar-button {
+.sidebar-button{
     width: 90%;
-    font-size: 0.9rem;
-    font-weight: bold;
+    font-size: 0.75rem !important;
+    font-weight: bold !important;
     height: 35px;
-    border: 0;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.sidebar-button:hover {
-    box-shadow: 0 0 8px black;
-    background-color: #ff5252;
-}
-
-.current-sidebar-button:hover {
-    box-shadow: 0 0 8px black;
-    background-color: white;
-}
-
-.current-sidebar-button {
-    background-color: #ff5252;
 }
