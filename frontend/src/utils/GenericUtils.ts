@@ -1,7 +1,7 @@
 import {ErrorsConstants} from "../constants/ErrorsConstants";
 import {LocalStorageConstants} from "../constants/LocalStorageConstants";
-
 import {User} from "../types/User";
+import * as AddressValidator from 'crypto-address-validator-ts';
 
 export class GenericUtils {
 
@@ -24,5 +24,9 @@ export class GenericUtils {
             user = JSON.parse(raw_user)
         }
         return {isLogged, user, access_token};
+    }
+
+    public static validateAddress(address: string): boolean {
+        return AddressValidator.validate(address, 'Tron', {networkType: '', chainType: ''});
     }
 }

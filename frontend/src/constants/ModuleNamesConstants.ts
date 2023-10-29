@@ -1,4 +1,6 @@
 export enum ModuleNamesConstants {
     HOME = 'Home',
-    BLOCK_TRANSACTIONS = 'Block Transactions'
+    TRANSACTIONS = 'Transactions',
+    BLOCK_TRANSACTIONS = 'Block Transactions',
+    BLOCK_HISTORY = 'Block History'
 }
