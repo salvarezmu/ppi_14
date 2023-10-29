@@ -10,6 +10,7 @@ import RegisterPage from "./pages/register/RegisterPage";
 import LoginPage from "./pages/login/LoginPage";
 import HistoryBlock from './pages/block-history/BlockHistoryPage';
 import {HomePage} from "./pages/home/HomePage";
+import DeleteAccount from "./pages/delete/DeleteAccount";
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
@@ -24,6 +25,7 @@ root.render(
                 <Route path={RoutesConstants.BLOCK_HISTORY} element={<HistoryBlock/>}></Route>
                 <Route path={RoutesConstants.BLOCK_TRANSACTIONS} element={<BlockTransactionsPage/>}></Route>
                 <Route path={RoutesConstants.TRX_TRANSACTIONS} element={<TrxTransactionsPage/>}></Route>
+                <Route path={RoutesConstants.DELETE} element={<DeleteAccount/>}></Route>
                 <Route path={RoutesConstants.HOME} element={<HomePage/>}></Route>
             </Routes>
         </BrowserRouter>

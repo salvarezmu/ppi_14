@@ -1,5 +1,8 @@
 import hashlib
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from core.utils import ApiUtils
 from core.constants import ApiConstants
 from users.models import User
@@ -111,3 +114,24 @@ def login(request):
     serialized = UserSerializer(user).data
     access_token = ApiUtils.generate_access_token(user)
     return ApiUtils.build_generic_response({'access_token': access_token, 'user': serialized})
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_account(request):
+    """
+    Vista para eliminar la cuenta de usuario.
+
+    Esta vista permite a los usuarios autenticados eliminar su cuenta de usuario.
+
+    Args:
+        request (HttpRequest): La solicitud HTTP que contiene los datos del usuario autenticado.
+
+    Returns:
+        Response: Una respuesta JSON que indica si la eliminación de la cuenta fue exitosa.
+
+    Raises:
+        PermissionDenied: Si el usuario no está autenticado, no se permite el acceso a esta vista.
+    """
+    user = request.user  # El usuario autenticado que realiza la solicitud
+    user.delete()  # Elimina la cuenta del usuario
+    return Response({'message': 'Cuenta eliminada con éxito.'}, status=status.HTTP_204_NO_CONTENT)
