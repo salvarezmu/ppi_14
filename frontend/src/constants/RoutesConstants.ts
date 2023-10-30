@@ -5,4 +5,5 @@ export enum RoutesConstants {
     BLOCK_HISTORY = '/blockHistory/',
     REGISTER = '/register/',
     LOGIN = '/login/',
+    DELETE = '/delete_account',
 }

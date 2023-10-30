@@ -6,6 +6,7 @@ import {Link} from "react-router-dom";
 import {Button} from "@mui/material";
 import {GenericUtils} from "../../utils/GenericUtils";
 import {LocalStorageConstants} from "../../constants/LocalStorageConstants";
+import DeleteAccount from "../../pages/delete/DeleteAccount";
 
 type Module = {
     name: ModuleNamesConstants | string;
@@ -67,7 +68,11 @@ export class SideBarComponent extends React.Component {
                             </Link>
                         </>
                         :
-                        <Button variant="contained" className={"auth-buttons"} onClick={this.logout}>Log out</Button>}
+                        <>
+                        <Button variant="contained" className={"auth-buttons"} onClick={this.logout}>Log out</Button>
+                        <DeleteAccount></DeleteAccount>
+                        </>
+                        }
                 </div>
             </div>
         );

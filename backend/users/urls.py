@@ -8,4 +8,7 @@ urlpatterns = [
 
     # URL para el inicio de sesión de usuarios.
     path("login/", views.login, name="Login User"),
+
+    # URL para la eliminación de usuarios
+    path('delete-account/', views.delete_account, name='Delete Account'),
 ]
