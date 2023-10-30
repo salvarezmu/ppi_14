@@ -3,11 +3,15 @@ import os
 import requests
 import numpy as np
 from rest_framework.decorators import api_view
-
+from django.http import HttpResponse
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_agg import FigureCanvasAgg
+from qrcode import make as make_qr_code
 from users.authentication import authenticate
 from .constants import TronApiConstants
 from .utils import TronApiUtils
 from core.utils import ApiUtils
+
 
 
 def validate_address_util(address) -> bool:
@@ -245,6 +249,8 @@ def get_trx_transactions(req, address):
     return ApiUtils.build_generic_response({'transactions': transactions, 'statistics': statistics})
 
 
+
+
 @api_view(["GET"])
 def get_history_blocks(req, quantity: int):
     """
@@ -285,6 +291,44 @@ def get_history_blocks(req, quantity: int):
         pass
     return ApiUtils.build_generic_response({'blocks': blocks})
 
+def generate_qr_code(request, address):
+    """
+    Genera un código QR a partir de una dirección y lo devuelve como una imagen PNG en una respuesta HTTP.
+
+    Args:
+        request (HttpRequest): La solicitud HTTP entrante.
+        address (str): La dirección para la cual se generará el código QR.
+
+    Returns:
+        HttpResponse: Una respuesta HTTP que contiene la imagen del código QR en formato PNG.
+
+    Funcionamiento:
+    1. Utiliza la función `make_qr_code(address)` para generar un objeto QR utilizando la dirección proporcionada.
+
+    2. Crea una figura de Matplotlib que actuará como el lienzo para la imagen del código QR.
+
+    3. Utiliza `FigureCanvasAgg` para asociar el lienzo de Matplotlib a la figura.
+
+    4. Agrega un subplot (ax) a la figura para mostrar la imagen del código QR.
+
+    5. Muestra la imagen del código QR en el subplot usando el método `imshow()`.
+
+    6. Crea un objeto `HttpResponse` con el tipo de contenido configurado como 'image/png', que será utilizado para enviar la imagen generada como respuesta HTTP.
+
+    7. Utiliza `canvas.print_figure(response, format='png')` para renderizar la figura en la respuesta HTTP en formato PNG.
+
+    8. Devuelve la respuesta HTTP que contiene la imagen del código QR.
+
+    Esta vista toma una dirección como entrada, genera un código QR basado en esa dirección y devuelve la imagen del código QR en una respuesta HTTP que se puede mostrar en un navegador o utilizar en otras aplicaciones que requieran la imagen del código QR.
+    """
+    qr = make_qr_code(address)
+    fig = Figure()
+    canvas = FigureCanvasAgg(fig)
+    ax = fig.add_subplot(111)
+    ax.imshow(qr.make_image())
+    response = HttpResponse(content_type='image/png')
+    canvas.print_figure(response, format='png')
+    return response
 
 @api_view(["GET"])
 def get_block_transactions(req, block: int):

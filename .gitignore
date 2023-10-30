@@ -19,3 +19,5 @@ package-log.json
 
 #Ignorar configuración de VS
 .vscode/
+frontend/src/pages/address-qr-code/AddressQrCode.css
+frontend/src/pages/address-qr-code/AddressQrCode.tsx
