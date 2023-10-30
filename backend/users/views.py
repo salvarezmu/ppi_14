@@ -2,13 +2,12 @@ import hashlib
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
 from core.utils import ApiUtils
 from core.constants import ApiConstants
 from users.models import User
 from tronapi.views import validate_address_util
 from users.serializer import UserSerializer
-
+from .authentication import authenticate
 
 @api_view(['POST'])
 def register(request):
@@ -116,7 +115,6 @@ def login(request):
     return ApiUtils.build_generic_response({'access_token': access_token, 'user': serialized})
 
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
 def delete_account(request):
     """
     Vista para eliminar la cuenta de usuario.
@@ -132,6 +130,14 @@ def delete_account(request):
     Raises:
         PermissionDenied: Si el usuario no está autenticado, no se permite el acceso a esta vista.
     """
-    user = request.user  # El usuario autenticado que realiza la solicitud
-    user.delete()  # Elimina la cuenta del usuario
-    return Response({'message': 'Cuenta eliminada con éxito.'}, status=status.HTTP_204_NO_CONTENT)
+    # Verifica la autenticación del token
+    decoded = authenticate(request.GET.get('token'))
+    if not decoded:
+        return ApiUtils.build_unauthorized_response()
+
+    # El usuario autenticado que realiza la solicitud
+    user = User.objects.filter(id=decoded[1]['user_id']).first()
+    
+    # Elimina la cuenta del usuario
+    user.delete()
+    return ApiUtils.build_generic_response({'message': 'Cuenta eliminada con éxito.'})
