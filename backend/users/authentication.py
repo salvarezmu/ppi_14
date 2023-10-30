@@ -19,13 +19,13 @@ def authenticate(jwt_token):
         El token JWT debe ser válido y estar firmado con la misma\
         clave secreta definida en la configuración de Django (settings.SECRET_KEY).
     """
-
+    decoded = None
     if jwt_token is None:
         return False
     try:
         # Intenta descodificar el token JWT utilizando la clave secreta
-        jwt.decode(jwt_token, settings.SECRET_KEY, algorithms=['HS256'])
+        decoded = jwt.decode(jwt_token, settings.SECRET_KEY, algorithms=['HS256'])
     except:
         # Si hay una excepción, el token no es válido
         return False
-    return True
+    return True, decoded
