@@ -8,12 +8,20 @@ import {ValidateAddressRes} from "../../types/responses/ValidateAddressRes";
 import {BackendConstants} from "../../constants/BackendConstants";
 import {Link} from "react-router-dom";
 import {RoutesConstants} from "../../constants/RoutesConstants";
+import Modal from "react-modal";
+import QRCode from "qrcode.react";
 
 interface State {
     currentAddress: string;
     showErrorValidAddress: boolean;
     loading: boolean;
+    isQRModalOpen: boolean; // Nuevo estado para controlar el modal
+    qrCodeUrl: string;
 }
+
+interface QrCodeResponse {
+    url: string;  // Asume que la respuesta contiene una propiedad 'url' de tipo string
+  }
 
 export class HomePage extends React.Component<unknown, State> {
 
@@ -23,6 +31,8 @@ export class HomePage extends React.Component<unknown, State> {
             currentAddress: '',
             showErrorValidAddress: false,
             loading: false,
+            isQRModalOpen: false, //
+            qrCodeUrl: ''
         }
     }
 
@@ -52,6 +62,44 @@ export class HomePage extends React.Component<unknown, State> {
         this.setState({showErrorValidAddress: false});
     };
 
+    openQRModal = () => {
+        this.setState({ isQRModalOpen: true });
+      };
+    
+      closeQRModal = () => {
+        this.setState({ isQRModalOpen: false });
+      };
+    
+      generateQRCode = () => {
+        // Genera el código QR para la dirección actual
+        const qrCodeData = this.state.currentAddress;
+      
+        // Estilos CSS para centrar y hacer más grande el código QR
+        const qrCodeContainerStyle = {
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+          height: "100%",
+        };
+      
+        const qrCodeStyle = {
+          width: "400px", // Ajusta el tamaño del código QR según tus necesidades
+          height: "400px",
+        };
+      
+        return (
+          <div style={qrCodeContainerStyle}>
+            <QRCode
+              value={qrCodeData}
+              size={256} // Ajusta el tamaño del código QR según tus necesidades
+              style={qrCodeStyle}
+            />
+          </div>
+        );
+      };
+      
+
     render() {
         return (
             <div className={"home-page-father"}>
@@ -74,7 +122,23 @@ export class HomePage extends React.Component<unknown, State> {
                         <Link to={RoutesConstants.TRX_TRANSACTIONS} state={{propAddress: this.state.currentAddress}}>
                             <Button variant="contained">Transacciones</Button>
                         </Link>
-                        <Button variant="contained" style={{marginLeft: '10px'}}>Qr</Button>
+                        
+                        
+                        <Button onClick={this.openQRModal} variant="contained" style={{ marginLeft: '10px' }}>
+                            Qr
+                        </Button>
+                        <Modal
+                            isOpen={this.state.isQRModalOpen}
+                            onRequestClose={this.closeQRModal}
+                        >
+                            <div style={{ textAlign: "center" }}>
+                            {this.generateQRCode()}
+                            <div style={{ marginTop: "10px" }}>
+                                <button onClick={this.closeQRModal} >Cerrar</button>
+                            </div>
+                            </div>
+                        </Modal>
+    
                     </div>
                 </div>
                 <CollaboratorsComponent></CollaboratorsComponent>

@@ -3,11 +3,15 @@ import os
 import requests
 import numpy as np
 from rest_framework.decorators import api_view
-
+from django.http import HttpResponse
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_agg import FigureCanvasAgg
+from qrcode import make as make_qr_code
 from users.authentication import authenticate
 from .constants import TronApiConstants
 from .utils import TronApiUtils
 from core.utils import ApiUtils
+
 
 
 def validate_address_util(address) -> bool:
@@ -245,6 +249,8 @@ def get_trx_transactions(req, address):
     return ApiUtils.build_generic_response({'transactions': transactions, 'statistics': statistics})
 
 
+
+
 @api_view(["GET"])
 def get_history_blocks(req, quantity: int):
     """
@@ -285,6 +291,22 @@ def get_history_blocks(req, quantity: int):
         pass
     return ApiUtils.build_generic_response({'blocks': blocks})
 
+def generate_qr_code(request, address):
+    # Genera el código QR con qrcode
+    qr = make_qr_code(address)
+
+    # Crea una figura de Matplotlib y muestra el código QR en ella
+    fig = Figure()
+    canvas = FigureCanvasAgg(fig)
+    ax = fig.add_subplot(111)
+    ax.imshow(qr.make_image())
+
+    # Guarda la imagen en un objeto HttpResponse
+    response = HttpResponse(content_type='image/png')
+    print(response)
+    canvas.print_figure(response, format='png')
+
+    return response
 
 @api_view(["GET"])
 def get_block_transactions(req, block: int):
