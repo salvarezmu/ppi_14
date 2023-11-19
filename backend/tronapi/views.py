@@ -13,7 +13,6 @@ from .utils import TronApiUtils
 from core.utils import ApiUtils
 
 
-
 def validate_address_util(address) -> bool:
     """
     Valida una dirección en la red utilizando un servicio externo.
@@ -36,6 +35,30 @@ def validate_address_util(address) -> bool:
 
     # Extrae el resultado de la respuesta del servicio
     return service_response.json()['result']
+
+
+def validate_contract_util(address) -> bool:
+    """
+        Valida la existencia de un contrato utilizando una API externa.
+
+        Esta función envía una solicitud POST a una API externa con la dirección del contrato.
+        Si la respuesta contiene un campo "abi", se considera que el contrato existe.
+
+        Argumentos:
+        - address (str): Dirección del contrato a validar.
+
+        Retorna:
+        - bool: True si el contrato existe; False en caso contrario.
+        """
+
+    # Envía la solicitud a la API externa para obtener información sobre el contrato
+    service_response = requests.post(TronApiConstants.GET_CONTRACT_URL.value, json={'value': address})
+    response = False
+
+    # Verifica si la respuesta de la API contiene el campo "abi" para determinar la existencia del contrato
+    if "abi" in service_response.json():
+        response = True
+    return response
 
 
 def get_trx_balance_util(address) -> int:
@@ -61,10 +84,16 @@ def get_trx_balance_util(address) -> int:
     raw_data = requests.get(url).json()['data']
 
     # Extrae el saldo en unidades SUN de la respuesta
-    raw_balance = raw_data[0]['balance']
+    balance = 0
 
-    # Convierte el saldo de SUN a TRX utilizando una constante de conversión
-    balance = raw_balance / TronApiConstants.SUN_TO_TRX.value
+    try:
+        raw_balance = raw_data[0]['balance']
+
+        # Convierte el saldo de SUN a TRX utilizando una constante de conversión
+        balance = raw_balance / TronApiConstants.SUN_TO_TRX.value
+    except:
+        pass
+
     return balance
 
 
@@ -249,8 +278,6 @@ def get_trx_transactions(req, address):
     return ApiUtils.build_generic_response({'transactions': transactions, 'statistics': statistics})
 
 
-
-
 @api_view(["GET"])
 def get_history_blocks(req, quantity: int):
     """
@@ -291,6 +318,7 @@ def get_history_blocks(req, quantity: int):
         pass
     return ApiUtils.build_generic_response({'blocks': blocks})
 
+
 def generate_qr_code(request, address):
     """
     Genera un código QR a partir de una dirección y lo devuelve como una imagen PNG en una respuesta HTTP.
@@ -329,6 +357,7 @@ def generate_qr_code(request, address):
     response = HttpResponse(content_type='image/png')
     canvas.print_figure(response, format='png')
     return response
+
 
 @api_view(["GET"])
 def get_block_transactions(req, block: int):

@@ -1,7 +1,6 @@
 import hashlib
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework import status
 from core.utils import ApiUtils
 from core.constants import ApiConstants
 from users.models import User

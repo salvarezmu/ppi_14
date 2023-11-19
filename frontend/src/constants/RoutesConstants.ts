@@ -7,4 +7,6 @@ export enum RoutesConstants {
     REGISTER = '/register/',
     LOGIN = '/login/',
     DELETE = '/delete_account',
+    TRC20_CONTRACTS = '/trc20/contract',
+    CATEGORIZED_TRANSACTIONS = '/transactions-categories',
 }
