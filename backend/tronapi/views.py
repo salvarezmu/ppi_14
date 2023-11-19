@@ -1,5 +1,4 @@
 import os
-
 import requests
 import numpy as np
 from rest_framework.decorators import api_view
@@ -11,6 +10,9 @@ from users.authentication import authenticate
 from .constants import TronApiConstants
 from .utils import TronApiUtils
 from core.utils import ApiUtils
+from django.shortcuts import render
+from django.http import JsonResponse
+import requests
 
 
 def validate_address_util(address) -> bool:
@@ -402,3 +404,25 @@ def get_block_transactions(req, block: int):
         data['USDMinerFee'] = data['minerFee'] * trm
 
     return ApiUtils.build_generic_response({'transactions': data.values.tolist()})
+
+def get_contract_transactions(request, contract_address):
+    url = "https://api.shasta.trongrid.io/wallet/getcontract"
+    payload = {
+        "value": contract_address,
+        "visible": True
+    }
+    headers = {
+        "accept": "application/json",
+        "content-type": "application/json"
+    }
+
+    response = requests.post(url, json=payload, headers=headers)
+    data = response.json()
+
+    # Extraer la información necesaria del contrato
+    contract_address = data.get("contract_address", "")
+    bytecode = data.get("bytecode", "")
+
+    # Lógica adicional según tus necesidades
+
+    return JsonResponse({"result": "success"})
