@@ -6,5 +6,7 @@ export enum BackendConstants {
     GET_BLOCK_TRANSACTIONS = 'api/v1/tronapi/block/get-transactions/',
     LOGIN = 'api/v1/users/login/',
     REGISTER = 'api/v1/users/register/',
-
+    DELETE_ACCOUNT = '/api/v1/users/delete-account',
+    GET_ALL_CONTRACTS = '/api/v1/contract/get-all',
+    SAVE_CONTRACT = '/api/v1/contract/save',
 }

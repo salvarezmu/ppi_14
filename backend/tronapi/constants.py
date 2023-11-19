@@ -7,6 +7,7 @@ class TronApiConstants(Enum):
     GET_TRM_URL = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest'
     GET_BALANCE_URL = 'https://api.shasta.trongrid.io/v1/accounts/${address}'
     GET_TRANSACTIONS_URL = 'https://api.shasta.trongrid.io/v1/accounts/${address}/transactions'
+    GET_CONTRACT_URL = 'https://api.shasta.trongrid.io/wallet/getcontract'
     VALIDATE_ADDRESS_URL = 'https://api.shasta.trongrid.io/wallet/validateaddress'
     GET_BLOCK_HISTORY_URL = 'https://api.shasta.trongrid.io/walletsolidity/getblockbylatestnum'
     GET_BLOCK_TRANSACTIONS_URL = 'https://api.shasta.trongrid.io/walletsolidity/gettransactioninfobyblocknum'

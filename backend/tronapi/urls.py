@@ -4,6 +4,8 @@ from . import views
 urlpatterns = [
     # Ruta para obtener el saldo TRX de una dirección específica. Utiliza la vista 'get_trx_balance'.
     path("trx/get-balance/<str:address>", views.get_trx_balance, name='Get TRX Balance'),
+    
+    path('trx/qr-code/<str:address>/', views.generate_qr_code, name='Generate QR Code'),
 
     # Ruta para obtener las transacciones TRX de una dirección específica. Utiliza la vista 'get_trx_transactions'.
     path("trx/get-transactions/<str:address>", views.get_trx_transactions,

@@ -3,7 +3,10 @@ import os
 import requests
 import numpy as np
 from rest_framework.decorators import api_view
-
+from django.http import HttpResponse
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_agg import FigureCanvasAgg
+from qrcode import make as make_qr_code
 from users.authentication import authenticate
 from .constants import TronApiConstants
 from .utils import TronApiUtils
@@ -34,6 +37,29 @@ def validate_address_util(address) -> bool:
     return service_response.json()['result']
 
 
+def validate_contract_util(address) -> bool:
+    """
+        Valida la existencia de un contrato utilizando una API externa.
+
+        Esta función envía una solicitud POST a una API externa con la dirección del contrato.
+        Si la respuesta contiene un campo "abi", se considera que el contrato existe.
+
+        Argumentos:
+        - address (str): Dirección del contrato a validar.
+
+        Retorna:
+        - bool: True si el contrato existe; False en caso contrario.
+        """
+    # Envía la solicitud a la API externa para obtener información sobre el contrato
+    service_response = requests.post(TronApiConstants.GET_CONTRACT_URL.value, json={"value": address, "visible": True})
+    response = False
+
+    # Verifica si la respuesta de la API contiene el campo "abi" para determinar la existencia del contrato
+    if "abi" in service_response.json():
+        response = True
+    return response
+
+
 def get_trx_balance_util(address) -> int:
     """
     Obtiene el saldo TRX de una dirección específica en la red Tron.
@@ -57,10 +83,16 @@ def get_trx_balance_util(address) -> int:
     raw_data = requests.get(url).json()['data']
 
     # Extrae el saldo en unidades SUN de la respuesta
-    raw_balance = raw_data[0]['balance']
+    balance = 0
 
-    # Convierte el saldo de SUN a TRX utilizando una constante de conversión
-    balance = raw_balance / TronApiConstants.SUN_TO_TRX.value
+    try:
+        raw_balance = raw_data[0]['balance']
+
+        # Convierte el saldo de SUN a TRX utilizando una constante de conversión
+        balance = raw_balance / TronApiConstants.SUN_TO_TRX.value
+    except:
+        pass
+
     return balance
 
 
@@ -284,6 +316,46 @@ def get_history_blocks(req, quantity: int):
         # la excepción y se devuelve una lista vacía.
         pass
     return ApiUtils.build_generic_response({'blocks': blocks})
+
+
+def generate_qr_code(request, address):
+    """
+    Genera un código QR a partir de una dirección y lo devuelve como una imagen PNG en una respuesta HTTP.
+
+    Args:
+        request (HttpRequest): La solicitud HTTP entrante.
+        address (str): La dirección para la cual se generará el código QR.
+
+    Returns:
+        HttpResponse: Una respuesta HTTP que contiene la imagen del código QR en formato PNG.
+
+    Funcionamiento:
+    1. Utiliza la función `make_qr_code(address)` para generar un objeto QR utilizando la dirección proporcionada.
+
+    2. Crea una figura de Matplotlib que actuará como el lienzo para la imagen del código QR.
+
+    3. Utiliza `FigureCanvasAgg` para asociar el lienzo de Matplotlib a la figura.
+
+    4. Agrega un subplot (ax) a la figura para mostrar la imagen del código QR.
+
+    5. Muestra la imagen del código QR en el subplot usando el método `imshow()`.
+
+    6. Crea un objeto `HttpResponse` con el tipo de contenido configurado como 'image/png', que será utilizado para enviar la imagen generada como respuesta HTTP.
+
+    7. Utiliza `canvas.print_figure(response, format='png')` para renderizar la figura en la respuesta HTTP en formato PNG.
+
+    8. Devuelve la respuesta HTTP que contiene la imagen del código QR.
+
+    Esta vista toma una dirección como entrada, genera un código QR basado en esa dirección y devuelve la imagen del código QR en una respuesta HTTP que se puede mostrar en un navegador o utilizar en otras aplicaciones que requieran la imagen del código QR.
+    """
+    qr = make_qr_code(address)
+    fig = Figure()
+    canvas = FigureCanvasAgg(fig)
+    ax = fig.add_subplot(111)
+    ax.imshow(qr.make_image())
+    response = HttpResponse(content_type='image/png')
+    canvas.print_figure(response, format='png')
+    return response
 
 
 @api_view(["GET"])

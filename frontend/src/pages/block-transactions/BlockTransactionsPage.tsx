@@ -32,6 +32,7 @@ const BlockTransactionsPage = () => {
     const [error, setError] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(blockNumberParam && transactions.length === 0);
     const login = GenericUtils.resolveLogin()
+    const [foundParamOneTime, setFoundParamOneTime] = useState(false);
     const getBlockTransactionsButton = async () => {
         setLoading(true);
         await getBlockTransactions();
@@ -56,13 +57,14 @@ const BlockTransactionsPage = () => {
             setTransactions(data.transactions);
             setError('');
             setLoading(false);
+            if (blockNumberParam) setFoundParamOneTime(true);
         } catch (error) {
             setError('Error al obtener las transacciones.');
             setLoading(false);
         }
     };
 
-    if (blockNumberParam && transactions.length === 0) getBlockTransactions();
+    if (blockNumberParam && transactions.length === 0 && !foundParamOneTime) getBlockTransactions();
 
     return (
         <div className={"transactions-page-father"}>
