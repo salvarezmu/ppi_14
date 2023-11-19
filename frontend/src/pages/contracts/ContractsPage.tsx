@@ -106,7 +106,6 @@ function ContractsPage() {
             setContracts(newContracts);
             setLoading(false);
         } catch (error: any) {
-            console.log(error)
             if (error?.response?.data?.message === "CONTRACT_ALREADY_EXISTS_ERROR") setMessage("El contrato ya existe.");
             else setMessage(`Error al crear el contrato.`);
             setLoading(false);

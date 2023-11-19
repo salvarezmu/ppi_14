@@ -7,5 +7,6 @@ urlpatterns = [
     path("api/v1/tronapi/", include("tronapi.urls")),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/v1/contract/', include("contracts.urls")),
+    path('api/v1/category/', include("categories.urls")),
     path('admin/', admin.site.urls),
 ]
