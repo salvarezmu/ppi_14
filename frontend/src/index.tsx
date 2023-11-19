@@ -11,25 +11,25 @@ import LoginPage from "./pages/login/LoginPage";
 import HistoryBlock from './pages/block-history/BlockHistoryPage';
 import {HomePage} from "./pages/home/HomePage";
 import DeleteAccount from "./pages/delete/DeleteAccount";
+import ContractsPage from "./pages/contracts/ContractsPage";
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
 );
 
 root.render(
-    <React.StrictMode>
-        <BrowserRouter>
-            <Routes>
-                <Route path={RoutesConstants.LOGIN} element={<LoginPage/>}></Route>
-                <Route path={RoutesConstants.REGISTER} element={<RegisterPage/>}></Route>
-                <Route path={RoutesConstants.BLOCK_HISTORY} element={<HistoryBlock/>}></Route>
-                <Route path={RoutesConstants.BLOCK_TRANSACTIONS} element={<BlockTransactionsPage/>}></Route>
-                <Route path={RoutesConstants.TRX_TRANSACTIONS} element={<TrxTransactionsPage/>}></Route>
-                <Route path={RoutesConstants.DELETE} element={<DeleteAccount/>}></Route>
-                <Route path={RoutesConstants.HOME} element={<HomePage/>}></Route>
-            </Routes>
-        </BrowserRouter>
-    </React.StrictMode>
+    <BrowserRouter>
+        <Routes>
+            <Route path={RoutesConstants.TRC20_CONTRACTS} element={<ContractsPage/>}/>
+            <Route path={RoutesConstants.LOGIN} element={<LoginPage/>}></Route>
+            <Route path={RoutesConstants.REGISTER} element={<RegisterPage/>}></Route>
+            <Route path={RoutesConstants.BLOCK_HISTORY} element={<HistoryBlock/>}></Route>
+            <Route path={RoutesConstants.BLOCK_TRANSACTIONS} element={<BlockTransactionsPage/>}></Route>
+            <Route path={RoutesConstants.TRX_TRANSACTIONS} element={<TrxTransactionsPage/>}></Route>
+            <Route path={RoutesConstants.DELETE} element={<DeleteAccount/>}></Route>
+            <Route path={RoutesConstants.HOME} element={<HomePage/>}></Route>
+        </Routes>
+    </BrowserRouter>
 );
 
 reportWebVitals();

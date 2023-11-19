@@ -30,6 +30,8 @@ ALLOWED_HOSTS = ["*"]
 # Application definition
 
 INSTALLED_APPS = [
+    'categories.apps.CategoriesConfig',
+    'contracts.apps.ContractsConfig',
     'users.apps.UsersConfig',
     'tronapi.apps.TronapiConfig',
     'django.contrib.admin',
