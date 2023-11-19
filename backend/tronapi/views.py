@@ -50,9 +50,8 @@ def validate_contract_util(address) -> bool:
         Retorna:
         - bool: True si el contrato existe; False en caso contrario.
         """
-
     # Envía la solicitud a la API externa para obtener información sobre el contrato
-    service_response = requests.post(TronApiConstants.GET_CONTRACT_URL.value, json={'value': address})
+    service_response = requests.post(TronApiConstants.GET_CONTRACT_URL.value, json={"value": address, "visible": True})
     response = False
 
     # Verifica si la respuesta de la API contiene el campo "abi" para determinar la existencia del contrato

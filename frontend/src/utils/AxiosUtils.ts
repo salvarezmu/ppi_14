@@ -9,8 +9,8 @@ export class AxiosUtils {
         return data.data;
     }
 
-    public static async post<T>(url: string, body: Record<string, unknown>, baseURL = process.env.REACT_APP_BASE_URL): Promise<T> {
-        const config: AxiosRequestConfig = {baseURL};
+    public static async post<T>(url: string, body: Record<string, unknown>, baseURL = process.env.REACT_APP_BASE_URL, params?: Record<string, unknown>): Promise<T> {
+        const config: AxiosRequestConfig = {baseURL, params};
         const data: AxiosResponse = await axios.post(url, body, config);
         this.validateData(data);
         return data.data;

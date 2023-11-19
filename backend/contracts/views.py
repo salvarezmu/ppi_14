@@ -50,3 +50,30 @@ def save_contract(request):
     # Serializa el contrato guardado para incluirlo en la respuesta
     serialized = ContractSerializer(contract).data
     return ApiUtils.build_generic_response({'contract': serialized})
+
+
+@api_view(["GET"])
+def get_all(request):
+    """
+        Obtiene todos los contratos asociados a un usuario.
+
+        Esta vista maneja una solicitud GET para recuperar todos los contratos asociados a un usuario autenticado.
+
+        Argumentos:
+        - request (Request): Objeto de solicitud que contiene el token de autenticación.
+
+        Retorna:
+        - Response: Respuesta HTTP con los contratos asociados al usuario.
+        """
+
+    # Autentica al usuario utilizando un token en la solicitud
+    _, decoded = authenticate(request.GET.get('token'))
+    if not decoded:
+        return ApiUtils.build_unauthorized_response()
+
+    # Obtiene todos los contratos asociados al usuario autenticado
+    contracts = Contract.objects.filter(user_id=decoded['user_id'])
+    serialized = ContractSerializer(contracts, many=True).data
+
+    # Construye una respuesta HTTP con los contratos serializados
+    return ApiUtils.build_generic_response({'contracts': serialized})
