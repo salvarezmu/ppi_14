@@ -16,4 +16,4 @@ class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ["id", "user_id", "tx_id", "value", "date", "fromAddress", "toAddress"]
+        fields = ["id", "user_id", "tx_id", "value", "timestamp", "from_address", "to_address"]

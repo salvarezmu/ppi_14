@@ -22,3 +22,4 @@ class Category(models.Model):
     to_address = models.TextField()
     description = models.TextField()
     category = models.TextField()
+
