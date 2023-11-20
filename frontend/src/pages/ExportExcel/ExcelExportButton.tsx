@@ -8,7 +8,7 @@ interface ExcelExportButtonProps {
 
 const ExcelExportButton: React.FC<ExcelExportButtonProps> = ({ address }) => {
   const handleExportToExcel = () => {
-    axios.get(`/api/export-to-excel/${address}/`, { responseType: 'blob' })
+    axios.get(`/api/v1/tronapi/export-to-excel/${address}/`, { responseType: 'blob', baseURL: process.env.REACT_APP_BASE_URL })
       .then((response: AxiosResponse<Blob>) => {
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement('a');
