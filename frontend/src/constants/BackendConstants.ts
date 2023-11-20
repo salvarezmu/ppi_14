@@ -9,4 +9,6 @@ export enum BackendConstants {
     DELETE_ACCOUNT = '/api/v1/users/delete-account',
     GET_ALL_CONTRACTS = '/api/v1/contract/get-all',
     SAVE_CONTRACT = '/api/v1/contract/save',
+    GET_ALL_CATEGORIES = '/api/v1/category/get-all',
+    GENERATE_QR = '/api/v1/tronapi/generate-qr/'
 }

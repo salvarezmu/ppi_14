@@ -115,7 +115,7 @@ function ContractsPage() {
     }
 
     return (
-        <div className={"categories-page-father"}>
+        <div className={"contracts-page-father"}>
             <SideBarComponent/>
             <div>
                 <Typography style={{marginLeft: '10px'}} variant="h5" gutterBottom>
