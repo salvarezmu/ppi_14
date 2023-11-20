@@ -416,20 +416,56 @@ def get_block_transactions(req, block: int):
     return ApiUtils.build_generic_response({'transactions': data.values.tolist()})
 
 def get_contract_transactions(request, contract_address):
+    """
+    Obtiene la información de transacciones asociadas a un contrato en la red Tron.
+
+    Parameters:
+        - request: La solicitud HTTP recibida.
+        - contract_address (str): La dirección del contrato Tron del cual se obtendrán las transacciones.
+
+    Returns:
+        - JsonResponse: Una respuesta JSON que incluye la información de transacciones y otros datos relevantes.
+
+    Raises:
+        - No specific exceptions raised.
+
+    """
+
+    # Construir la URL para obtener transacciones asociadas al contrato desde la API de Tron
     url = f"https://api.shasta.trongrid.io/v1/contracts/{contract_address}/transactions"
 
+    # Realizar una solicitud GET a la API de Tron
     response = requests.get(url)
+
+    # Convertir la respuesta a formato JSON
     data = response.json()
 
     # Extraer la información necesaria del contrato
     contract_address = data.get("contract_address", "")
     bytecode = data.get("bytecode", "")
 
-    return JsonResponse({"result": "success" , 'response': data})
+    # Devolver una respuesta JSON con la información obtenida
+    return JsonResponse({"result": "success", 'response': data})
 
 
 @api_view(["GET"])
 def export_to_excel(request, address):
+    """
+    Exporta transacciones relacionadas con la dirección Tron a un archivo Excel.
+
+    Parameters:
+        - request: La solicitud HTTP recibida.
+        - address (str): La dirección Tron para la cual se obtendrán las transacciones.
+
+    Returns:
+        - HttpResponse: Una respuesta HTTP con el archivo Excel adjunto o una respuesta JSON vacía.
+
+    Raises:
+        - No specific exceptions raised.
+
+    """
+
+    # Construir la URL para obtener transacciones desde la API de Tron
     url = TronApiConstants.GET_TRANSACTIONS_URL.value.replace(TronApiConstants.REPLACE_ADDRESS_PARAM.value, address)
     params = {}
 
@@ -472,4 +508,5 @@ def export_to_excel(request, address):
 
         return response
     else:
+        # Si no hay datos, devolver una respuesta JSON vacía
         return ApiUtils.build_generic_response({'transactions': [], 'statistics': {}})
