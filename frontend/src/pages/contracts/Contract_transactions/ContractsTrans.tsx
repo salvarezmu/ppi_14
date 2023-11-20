@@ -1,6 +1,18 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Button, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import {
+  Button,
+  TextField,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+} from '@mui/material';
+import SideBarComponent from '../../../components/sidebar/SideBarComponent';
+import './ContractsTrans.css';
 
 interface Transaction {
   from: string;
@@ -14,7 +26,7 @@ const ContractsTrans: React.FC = () => {
 
   const handleFetchTransactions = async () => {
     try {
-      const response = await axios.get(`http://localhost:8000/api/contract-transactions/${contractAddress}/`);
+      const response = await axios.get(`/api/v1/contract-transactions/${contractAddress}/`);
       setTransactions(response.data.transactions || []);
     } catch (error) {
       console.error('Error fetching transactions:', error);
@@ -22,38 +34,41 @@ const ContractsTrans: React.FC = () => {
   };
 
   return (
-    <div>
-      <TextField
-        id="contractAddress"
-        label="Contract Address"
-        variant="outlined"
-        value={contractAddress}
-        onChange={(e) => setContractAddress(e.target.value)}
-      />
-      <Button variant="contained" onClick={handleFetchTransactions}>
-        Fetch Transactions
-      </Button>
+    <div className="contracts-page-father">
+      <SideBarComponent />
+      <div className="content-container">
+        <TextField
+          id="contractAddress"
+          label="Contract Address"
+          variant="outlined"
+          value={contractAddress}
+          onChange={(e) => setContractAddress(e.target.value)}
+        />
+        <Button variant="contained" onClick={handleFetchTransactions}>
+          Traer transacciones
+        </Button>
 
-      <TableContainer component={Paper} style={{ marginTop: '20px' }}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>From Address</TableCell>
-              <TableCell>To Address</TableCell>
-              <TableCell>Amount</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {transactions.map((transaction, index) => (
-              <TableRow key={index}>
-                <TableCell>{transaction.from}</TableCell>
-                <TableCell>{transaction.to}</TableCell>
-                <TableCell>{transaction.amount}</TableCell>
+        <TableContainer component={Paper} className="table-container">
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Desde</TableCell>
+                <TableCell>Hacia</TableCell>
+                <TableCell>Cantidad</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {transactions.map((transaction, index) => (
+                <TableRow key={index}>
+                  <TableCell>{transaction.from}</TableCell>
+                  <TableCell>{transaction.to}</TableCell>
+                  <TableCell>{transaction.amount}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
     </div>
   );
 };

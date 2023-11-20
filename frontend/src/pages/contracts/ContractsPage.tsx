@@ -149,7 +149,7 @@ function ContractsPage() {
                                             <TableCell>{contract.name}</TableCell>
                                             <TableCell>{contract.address}</TableCell>
                                             <TableCell>
-                                                {<Link to={RoutesConstants.TRC20_CONTRACT_TRANSACTIONS}
+                                                {<Link to={RoutesConstants.CONTRACT_TRANSACTIONS}
                                                        state={{id: contract.id}}>
                                                     <IconButton aria-label="delete">
                                                         <PlusIcon></PlusIcon>
