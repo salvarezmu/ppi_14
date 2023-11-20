@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useRef} from "react";
 import './TrxTransactionsPage.css'
 import {SideBarComponent} from "../../components/sidebar/SideBarComponent";
 import CollaboratorsComponent from "../../components/collaborators/CollaboratorsComponent";
@@ -26,8 +26,23 @@ import {ErrorsConstants} from "../../constants/ErrorsConstants";
 import {GenericUtils} from "../../utils/GenericUtils";
 import {BasicStatistics} from "../../types/BasicStatistics";
 import {useLocation} from "react-router-dom";
+import Modal from "react-modal";
+import {
+    ComposedChart,
+    Line,
+    Bar,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
+    Legend,
+    BarChart,
+    Brush,
+    ReferenceLine
 
-
+  } from 'recharts';
+  import html2canvas from "html2canvas";
+  import { saveAs } from "file-saver";
 
 const TrxTransactionsPage = () => {
 
@@ -129,6 +144,144 @@ const TrxTransactionsPage = () => {
         }
     }
 
+    const downloadAsPng = (element:any) => {
+        html2canvas(element).then((canvas) => {
+          canvas.toBlob((blob) => {
+            if (blob){
+                saveAs(blob, "grafico.png");
+            }
+            
+          });
+        });
+      };
+
+    const [modalIsOpen, setIsOpen] = useState(false);
+
+    function openHistogram() {
+        setIsOpen(true);
+        };
+    
+    function closeHistogram() {
+        setIsOpen(false);
+    }
+
+
+
+    const generateGraph = () => {
+
+                const mappedData = transactions.map(item => ({
+                    name: item[0],
+                    trx: item[1],
+                    usd: parseFloat(item[7].toFixed(4))
+                  }));
+
+                  const gradientOffset = () => {
+                    const dataMax = Math.max(...mappedData.map((i) => i.usd));
+                    const dataMin = Math.min(...mappedData.map((i) => i.usd));
+                  
+                    if (dataMax <= 0) {
+                      return 0;
+                    }
+                    if (dataMin >= 0) {
+                      return 1;
+                    }
+                  
+                    return dataMax / (dataMax - dataMin);
+                  };
+                  
+                  const off = gradientOffset();
+                    return (
+                        <div>
+        
+                        <ComposedChart
+                        width={550}
+                        height={470}
+                        data={mappedData}
+                        style={{marginLeft: '10px', marginTop: '20px'}}
+                      >
+                        <CartesianGrid stroke="#f5f5f5" />
+                        <XAxis dataKey="name" ticks={[0]} scale="auto" /> 
+                        <YAxis type="number" domain={['dataMin', 'dataMax']} />
+                        <Tooltip />
+                        <Legend verticalAlign="top"/>
+                        <Bar dataKey="trx" barSize={20} fill="#413ea0" />
+                        <Line type="monotone" dataKey="trx" stroke="#ff7300" />
+                        <Tooltip />
+                      </ComposedChart>
+
+                        <BarChart
+                        width={600}
+                        height={350}
+                        data={mappedData}
+                        margin={{
+                            top: 10,
+                            right: 10,
+                            left: 10,
+                            bottom: 5,
+                        }}
+                        >
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="name" ticks={[0]}/>
+                        <YAxis />
+                        <Tooltip />
+                        <Legend  wrapperStyle={{ lineHeight: '40px' }} />
+                        <ReferenceLine y={0} stroke="#000" />
+                        <Brush  height={30} stroke="#8884d8" />
+                        <Bar dataKey="usd" fill="#8884d8" />
+                        <Bar dataKey="trx" fill="#82ca9d" />
+                        </BarChart>
+                        </div>
+                      
+                    )
+            
+
+    }
+
+
+
+    const BuildHistogram = () => {
+        const ref = useRef<HTMLDivElement>(null);
+        if (transactions){
+            return (
+                <div>
+                <Button
+                variant="contained"
+                onClick={openHistogram}
+                style={{marginLeft: '6px', height: '35px', marginTop: '10px', marginBottom: '10px'}}>
+                Ver gráfico
+                </Button>
+
+                <Modal
+                isOpen={modalIsOpen}
+                onRequestClose={closeHistogram}
+                contentLabel="Gráfico"
+                >
+                
+                <Button
+                variant="contained"
+                style={{marginLeft: '9px', height: '5%', width: '5%', marginTop: '15px', marginBottom: '10px', backgroundColor: 'red'}}
+                onClick={closeHistogram}
+                >
+                    Cerrar
+                </Button>
+                <Button onClick={() => downloadAsPng(ref.current)}
+                variant="contained"
+                style={{marginLeft: '9px', height: '5%', width: '15%', marginTop: '15px', marginBottom: '10px'}}
+                >
+                    Descargar como PNG
+                </Button> 
+
+                <div>
+                <div ref={ref}
+                style={{marginLeft: '30%'}}>{generateGraph()}</div> 
+                </div>
+
+                </Modal>
+                </div>
+            )
+        }
+    }
+
     const buildTable = (isLogged: boolean) => {
         return (
             <TableContainer id={"trx-transactions-page-table"} component={Paper}>
@@ -178,7 +331,7 @@ const TrxTransactionsPage = () => {
         setCurrentAddress(stateAddress || login.user.default_address);
         getData(login.user.default_address, true, login.access_token);
     }
-
+    console.log(transactions);
     return (
         <div className={"trx-transactions-page-father"}>
             <SideBarComponent>
@@ -224,6 +377,7 @@ const TrxTransactionsPage = () => {
                     </div>
                     {buildStatistics()}
                     {showBalance()}
+                    {BuildHistogram()}
                 </div>
                 <div>
                     {buildTable(login.isLogged)}
