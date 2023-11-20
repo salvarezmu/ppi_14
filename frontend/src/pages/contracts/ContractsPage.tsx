@@ -29,8 +29,6 @@ import {AxiosUtils} from "../../utils/AxiosUtils";
 import {GenericUtils} from "../../utils/GenericUtils";
 import {GetAllUserContractsRes} from "../../types/responses/GetAllUserContractsRes";
 import {Contract} from "../../types/Contract";
-import {Link} from "react-router-dom";
-import {RoutesConstants} from "../../constants/RoutesConstants";
 import {SaveContractRes} from "../../types/responses/SaveContractRes";
 
 function ContractsPage() {
@@ -43,19 +41,6 @@ function ContractsPage() {
     const [address, setAddress] = useState("");
     const [message, setMessage] = useState("");
 
-    const PlusIcon = createSvgIcon(
-        <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="h-6 w-6"
-        >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
-        </svg>,
-        'Plus',
-    );
     useEffect(() => {
         const getContracts = async () => {
             try {
@@ -113,7 +98,6 @@ function ContractsPage() {
             setAddress("");
         }
     }
-
     return (
         <div className={"contracts-page-father"}>
             <SideBarComponent/>
@@ -139,7 +123,6 @@ function ContractsPage() {
                                         <TableCell>ID</TableCell>
                                         <TableCell>Nombre</TableCell>
                                         <TableCell>Dirección</TableCell>
-                                        <TableCell>Acciones</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -148,14 +131,6 @@ function ContractsPage() {
                                             <TableCell>{contract.id}</TableCell>
                                             <TableCell>{contract.name}</TableCell>
                                             <TableCell>{contract.address}</TableCell>
-                                            <TableCell>
-                                                {<Link to={RoutesConstants.TRC20_CONTRACT_TRANSACTIONS}
-                                                       state={{id: contract.id}}>
-                                                    <IconButton aria-label="delete">
-                                                        <PlusIcon></PlusIcon>
-                                                    </IconButton>
-                                                </Link>}
-                                            </TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>

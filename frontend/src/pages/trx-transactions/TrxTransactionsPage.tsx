@@ -44,6 +44,7 @@ import {
 } from 'recharts';
 import html2canvas from "html2canvas";
 import {saveAs} from "file-saver";
+import ExcelExportButton from "../ExportExcel/ExcelExportButton";
 
 const TrxTransactionsPage = () => {
 
@@ -57,12 +58,17 @@ const TrxTransactionsPage = () => {
     const [endDate, setEndDate] = useState<string>('');
     const [statistics, setStatistics] = useState<BasicStatistics | null>(null);
 
+    // Nuevos estados de filtro
+    const [filterRecipient, setFilterRecipient] = useState<string>('');
+    const [filterSender, setFilterSender] = useState<string>('');
+
     const showBalance = () => {
         if (balance >= 0) {
-            return (<div id={"trx-transactions-page-header-balance"}>
-                <p>Balance: {`${balance} ${CoinSymbolConstants.TRX}`}</p>
-                <p>USD: {USDBalance >= 0 ? USDBalance.toFixed(4) + '$' : 'Inicia sesión para conocerlo.'}</p>
-            </div>);
+            return (
+                <div id={"trx-transactions-page-header-balance"}>
+                    <p>Balance: {`${balance} ${CoinSymbolConstants.TRX}`}</p>
+                    <p>USD: {USDBalance >= 0 ? USDBalance.toFixed(4) + '$' : 'Inicia sesión para conocerlo.'}</p>
+                </div>);
         }
     }
 
@@ -107,14 +113,22 @@ const TrxTransactionsPage = () => {
         if (startDate) initTimestamp = new Date(startDate).valueOf();
         if (endDate) finalTimestamp = new Date(endDate).valueOf();
         const {balance, USDBalance} = await getBalances(address, requiresUSD, token);
-        const transactions = await getTransactions(address, requiresUSD, token, initTimestamp, finalTimestamp);
+        const allTransactions = await getTransactions(address, requiresUSD, token, initTimestamp, finalTimestamp);
+
+        // Aplicar filtros
+        const filteredTransactions = allTransactions.data.transactions.filter(transaction => {
+            const recipientMatch = transaction[4].toLowerCase().includes(filterRecipient.toLowerCase());
+            const senderMatch = transaction[3].toLowerCase().includes(filterSender.toLowerCase());
+            return recipientMatch && senderMatch;
+        });
+
         setCurrentAddress(address);
         setBalance(balance);
         setUSDBalance(USDBalance);
-        setTransactions(transactions.data.transactions);
-        setStatistics(transactions.data.statistics);
+        setTransactions(filteredTransactions);
+        setStatistics(allTransactions.data.statistics);
         setLoading(false);
-    }
+    };
 
     const copyOnClipboard = async (e: any) => {
         await navigator.clipboard.writeText(e.target.innerText);
@@ -356,10 +370,16 @@ const TrxTransactionsPage = () => {
                                 <TextField
                                     style={{marginLeft: '10px'}}
                                     variant="outlined"
-                                    onChange={changeInput}
+                                    onChange={(e) => setFilterRecipient(e.target.value)}
+                                    placeholder="Filtrar por destinatario"
                                 />
-                                <small style={{marginLeft: '10px'}}>Dirección
-                                    actual: {currentAddress}</small>
+                                <TextField
+                                    style={{marginLeft: '10px'}}
+                                    variant="outlined"
+                                    onChange={(e) => setFilterSender(e.target.value)}
+                                    placeholder="Filtrar por dirección de salida"
+                                />
+                                <small style={{marginLeft: '10px'}}>Dirección actual: {currentAddress}</small>
                             </div>
                             <Button
                                 variant="contained"
@@ -368,7 +388,7 @@ const TrxTransactionsPage = () => {
                             >
                                 Buscar
                             </Button>
-
+                            <ExcelExportButton address={currentAddress}/>
                         </div>
                         <div>
                             <input
