@@ -26,6 +26,7 @@ import { ErrorsConstants } from "../../constants/ErrorsConstants";
 import { GenericUtils } from "../../utils/GenericUtils";
 import { BasicStatistics } from "../../types/BasicStatistics";
 import { useLocation } from "react-router-dom";
+import ExcelExportButton from "../ExportExcel/ExcelExportButton";
 
 const TrxTransactionsPage = () => {
 
@@ -140,6 +141,8 @@ const TrxTransactionsPage = () => {
     }
   }
 
+
+
   const buildTable = (isLogged: boolean) => {
     return (
       <TableContainer id={"trx-transactions-page-table"} component={Paper}>
@@ -219,9 +222,9 @@ const TrxTransactionsPage = () => {
                 style={{ marginLeft: '5px', height: '35px' }}
               >
                 Buscar
-              </Button>
-
-            </div>
+              </Button> 
+              <ExcelExportButton address={currentAddress} />
+              </div>
             <div>
               <input
                 type="date"

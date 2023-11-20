@@ -13,6 +13,8 @@ from core.utils import ApiUtils
 from django.shortcuts import render
 from django.http import JsonResponse
 import requests
+import pandas as pd
+from openpyxl import Workbook
 
 
 def validate_address_util(address) -> bool:
@@ -423,6 +425,51 @@ def get_contract_transactions(request, contract_address):
     contract_address = data.get("contract_address", "")
     bytecode = data.get("bytecode", "")
 
-    # Lógica adicional según tus necesidades
-
     return JsonResponse({"result": "success"})
+
+
+@api_view(["GET"])
+def export_to_excel(request, address):
+    url = TronApiConstants.GET_TRANSACTIONS_URL.value.replace(TronApiConstants.REPLACE_ADDRESS_PARAM.value, address)
+    params = {}
+
+    # Obtener datos de transacciones desde la API de Tron
+    raw_response = requests.get(url, params=params).json()['data']
+    
+    if raw_response:
+        # Mapear y procesar la respuesta para obtener datos relevantes
+        data = TronApiUtils.map_get_trx_transactions_response(raw_response)
+        data['amount'] = data['amount'] / TronApiConstants.SUN_TO_TRX.value
+        data['from'] = TronApiUtils.hex_address_to_base58(data['from'])
+        data['to'] = TronApiUtils.hex_address_to_base58(data['to'])
+        data['type'] = np.where(data['to'] == address, 'Entrada', 'Salida')
+
+        # Crear un DataFrame de pandas
+        df = pd.DataFrame(data)
+
+        # Crear un libro de trabajo de Excel y agregar el DataFrame como una hoja
+        wb = Workbook()
+        ws = wb.active
+        for r_idx, row in enumerate(df.iterrows(), 1):
+            for c_idx, value in enumerate(row[1], 1):
+                ws.cell(row=r_idx, column=c_idx, value=value)
+
+        # Configurar encabezados y título
+        headers = ['Fecha', 'Cantidad', 'De', 'A', 'Tipo']
+        for col_num, header in enumerate(headers, 1):
+            ws.cell(row=1, column=col_num, value=header)
+
+        # Configurar el título
+        ws.merge_cells(start_row=1, start_column=1, end_row=1, end_column=len(headers))
+        ws['A1'] = 'Tron Pulse'
+
+        # Crear la respuesta HTTP
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = f'attachment; filename=tron_pulse_{address}.xlsx'
+
+        # Guardar el libro de trabajo y escribir la respuesta
+        wb.save(response)
+
+        return response
+    else:
+        return ApiUtils.build_generic_response({'transactions': [], 'statistics': {}})

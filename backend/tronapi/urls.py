@@ -21,5 +21,7 @@ urlpatterns = [
     # Ruta para obtener las transacciones de un bloque específico. Utiliza la vista 'get_block_transactions'.
     path("block/get-transactions/<str:block>", views.get_block_transactions, name="Get Block Transactions"),
 
-    path("api/contract-transactions/<str:contract_address>/", get_contract_transactions, name="get_contract_transactions"),
+    path("api/contract-transactions/<str:contract_address>/", views.get_contract_transactions, name="get_contract_transactions"),
+
+    path('export-to-excel/<str:address>/', views.export_to_excel, name='export_to_excel'),
 ]
