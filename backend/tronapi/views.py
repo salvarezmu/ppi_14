@@ -322,13 +322,26 @@ def get_history_blocks(req, quantity: int):
 
 @api_view(["GET"])
 def generate_qr_code(request, address):
-    # Crear el código QR
+    """
+    Genera una imagen de código QR para una dirección dada y la devuelve como una respuesta HTTP.
+
+    Args:
+    - request: Objeto de solicitud de Django.
+    - direccion (str): La dirección para codificar en el código QR.
+
+    Returns:
+    - HttpResponse: Respuesta HTTP que contiene la imagen del código QR en formato PNG.
+    """
+
+    # Crear la instancia del código QR
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
         box_size=10,
         border=4,
     )
+
+    # Agregar los datos de la dirección al código QR
     qr.add_data(address)
     qr.make(fit=True)
 
@@ -337,14 +350,16 @@ def generate_qr_code(request, address):
     img = qr.make_image(fill_color="black", back_color="white")
     ax.imshow(img)
 
-    # Configurar la figura y el eje
-    ax.axis('off')  # Ocultar ejes
+    # Configurar la figura y el eje, se ocultan
+    ax.axis('off')
 
     # Convertir la figura a un flujo de bytes
     canvas = FigureCanvas(fig)
     buf = io.BytesIO()
     canvas.print_png(buf)
     plt.close(fig)
+
+    # Crear una respuesta HTTP con la imagen del código QR
     response = HttpResponse(buf.getvalue(), content_type='image/png')
     return response
 

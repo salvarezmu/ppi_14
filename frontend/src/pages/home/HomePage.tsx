@@ -59,8 +59,8 @@ export class HomePage extends React.Component<unknown, State> {
     };
 
     openQRModal = () => {
-        const url = process.env.REACT_APP_BASE_URL + BackendConstants.GENERATE_QR + this.state.currentAddress;
-        axios.get(url, {responseType: 'arraybuffer'})
+        const url = BackendConstants.GENERATE_QR + this.state.currentAddress;
+        axios.get(url, {responseType: 'arraybuffer', baseURL: process.env.REACT_APP_BASE_URL})
             .then(response => {
                 const url = URL.createObjectURL(new Blob([response.data], {type: 'image/png'}));
                 this.setState({qrCodeUrl: url, isQRModalOpen: true});
