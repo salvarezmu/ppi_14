@@ -408,24 +408,16 @@ def get_block_transactions(req, block: int):
     return ApiUtils.build_generic_response({'transactions': data.values.tolist()})
 
 def get_contract_transactions(request, contract_address):
-    url = "https://api.shasta.trongrid.io/wallet/getcontract"
-    payload = {
-        "value": contract_address,
-        "visible": True
-    }
-    headers = {
-        "accept": "application/json",
-        "content-type": "application/json"
-    }
+    url = f"https://api.shasta.trongrid.io/v1/contracts/{contract_address}/transactions"
 
-    response = requests.post(url, json=payload, headers=headers)
+    response = requests.get(url)
     data = response.json()
 
     # Extraer la información necesaria del contrato
     contract_address = data.get("contract_address", "")
     bytecode = data.get("bytecode", "")
 
-    return JsonResponse({"result": "success"})
+    return JsonResponse({"result": "success" , 'response': data})
 
 
 @api_view(["GET"])

@@ -43,6 +43,7 @@ function ContractsPage() {
     const [address, setAddress] = useState("");
     const [message, setMessage] = useState("");
 
+
     const PlusIcon = createSvgIcon(
         <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -113,7 +114,6 @@ function ContractsPage() {
             setAddress("");
         }
     }
-
     return (
         <div className={"categories-page-father"}>
             <SideBarComponent/>

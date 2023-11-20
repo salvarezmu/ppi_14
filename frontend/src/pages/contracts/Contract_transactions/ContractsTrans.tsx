@@ -22,15 +22,16 @@ interface Transaction {
 
 const ContractsTrans: React.FC = () => {
   const [contractAddress, setContractAddress] = useState('');
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [transactions, setTransactions] = useState<any[]>([]);
 
   const handleFetchTransactions = async () => {
     try {
-      const response = await axios.get(`/api/v1/contract-transactions/${contractAddress}/`);
-      setTransactions(response.data.transactions || []);
+      const response = await axios.get(`/api/v1/tronapi/contract-transactions/${contractAddress}/`, { baseURL: process.env.REACT_APP_BASE_URL });
+      setTransactions(response.data.response.data || []);
     } catch (error) {
       console.error('Error fetching transactions:', error);
-    }
+    
+    }console.log('response.data')
   };
 
   return (
@@ -52,17 +53,19 @@ const ContractsTrans: React.FC = () => {
           <Table>
             <TableHead>
               <TableRow>
+                <TableCell>TX ID</TableCell>
+                <TableCell>Bloque</TableCell>
+                <TableCell>Fecha</TableCell>
                 <TableCell>Desde</TableCell>
-                <TableCell>Hacia</TableCell>
-                <TableCell>Cantidad</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {transactions.map((transaction, index) => (
                 <TableRow key={index}>
-                  <TableCell>{transaction.from}</TableCell>
-                  <TableCell>{transaction.to}</TableCell>
-                  <TableCell>{transaction.amount}</TableCell>
+                  <TableCell>{transaction.txID}</TableCell>
+                  <TableCell>{transaction.blockNumber}</TableCell>
+                  <TableCell>{new Date(transaction.raw_data.timestamp).toLocaleDateString()}</TableCell>
+                  <TableCell>{transaction.raw_data.contract[0].parameter.value.owner_address}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
