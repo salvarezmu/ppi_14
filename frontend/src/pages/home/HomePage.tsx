@@ -9,7 +9,7 @@ import {BackendConstants} from "../../constants/BackendConstants";
 import {Link} from "react-router-dom";
 import {RoutesConstants} from "../../constants/RoutesConstants";
 import Modal from "react-modal";
-import QRCode from "qrcode.react";
+import axios from "axios";
 
 interface State {
     currentAddress: string;
@@ -18,10 +18,6 @@ interface State {
     isQRModalOpen: boolean; // Nuevo estado para controlar el modal
     qrCodeUrl: string;
 }
-
-interface QrCodeResponse {
-    url: string;  // Asume que la respuesta contiene una propiedad 'url' de tipo string
-  }
 
 export class HomePage extends React.Component<unknown, State> {
 
@@ -63,42 +59,20 @@ export class HomePage extends React.Component<unknown, State> {
     };
 
     openQRModal = () => {
-        this.setState({ isQRModalOpen: true });
-      };
-    
-      closeQRModal = () => {
-        this.setState({ isQRModalOpen: false });
-      };
-    
-      generateQRCode = () => {
-        // Genera el código QR para la dirección actual
-        const qrCodeData = this.state.currentAddress;
-      
-        // Estilos CSS para centrar y hacer más grande el código QR
-        const qrCodeContainerStyle = {
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          width: "100%",
-          height: "100%",
-        };
-      
-        const qrCodeStyle = {
-          width: "400px", // Ajusta el tamaño del código QR según tus necesidades
-          height: "400px",
-        };
-      
-        return (
-          <div style={qrCodeContainerStyle}>
-            <QRCode
-              value={qrCodeData}
-              size={256} // Ajusta el tamaño del código QR según tus necesidades
-              style={qrCodeStyle}
-            />
-          </div>
-        );
-      };
-      
+        const url = BackendConstants.GENERATE_QR + this.state.currentAddress;
+        axios.get(url, {responseType: 'arraybuffer', baseURL: process.env.REACT_APP_BASE_URL})
+            .then(response => {
+                const url = URL.createObjectURL(new Blob([response.data], {type: 'image/png'}));
+                this.setState({qrCodeUrl: url, isQRModalOpen: true});
+            })
+            .catch(error => {
+                console.error('Error fetching QR code:', error);
+            });
+    };
+
+    closeQRModal = () => {
+        this.setState({isQRModalOpen: false});
+    };
 
     render() {
         return (
@@ -113,7 +87,6 @@ export class HomePage extends React.Component<unknown, State> {
                         style={{minWidth: '400px'}}
                         required
                         id="outlined-required"
-                        label="Address"
                         value={this.state.currentAddress}
                         onChange={this.setAddress}
                         onKeyUp={this.validateAddress}
@@ -122,23 +95,38 @@ export class HomePage extends React.Component<unknown, State> {
                         <Link to={RoutesConstants.TRX_TRANSACTIONS} state={{propAddress: this.state.currentAddress}}>
                             <Button variant="contained">Transacciones</Button>
                         </Link>
-                        
-                        
-                        <Button onClick={this.openQRModal} variant="contained" style={{ marginLeft: '10px' }}>
+
+
+                        <Button onClick={this.openQRModal} variant="contained" style={{marginLeft: '10px'}}>
                             Qr
                         </Button>
                         <Modal
                             isOpen={this.state.isQRModalOpen}
                             onRequestClose={this.closeQRModal}
                         >
-                            <div style={{ textAlign: "center" }}>
-                            {this.generateQRCode()}
-                            <div style={{ marginTop: "10px" }}>
-                                <button onClick={this.closeQRModal} >Cerrar</button>
-                            </div>
+                            <div style={{textAlign: "center"}}>
+                                <div style={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    width: "100%",
+                                    height: "100%",
+                                }}>
+                                    <img
+                                        alt={this.state.qrCodeUrl}
+                                        src={this.state.qrCodeUrl}
+                                        style={{
+                                            width: "500px", // Ajusta el tamaño del código QR según tus necesidades
+                                            height: "400px",
+                                        }}
+                                    />
+                                </div>
+                                <div style={{marginTop: "10px"}}>
+                                    <button onClick={this.closeQRModal}>Cerrar</button>
+                                </div>
                             </div>
                         </Modal>
-    
+
                     </div>
                 </div>
                 <CollaboratorsComponent></CollaboratorsComponent>

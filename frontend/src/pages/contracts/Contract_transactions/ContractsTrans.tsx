@@ -13,12 +13,7 @@ import {
 } from '@mui/material';
 import SideBarComponent from '../../../components/sidebar/SideBarComponent';
 import './ContractsTrans.css';
-
-interface Transaction {
-  from: string;
-  to: string;
-  amount: number;
-}
+import CollaboratorsComponent from "../../../components/collaborators/CollaboratorsComponent";
 
 const ContractsTrans: React.FC = () => {
   const [contractAddress, setContractAddress] = useState('');
@@ -62,7 +57,7 @@ const ContractsTrans: React.FC = () => {
             <TableBody>
               {transactions.map((transaction, index) => (
                 <TableRow key={index}>
-                  <TableCell>{transaction.txID}</TableCell>
+                  <TableCell  style={{maxWidth: 200, overflow: "hidden"}}>{transaction.txID}</TableCell>
                   <TableCell>{transaction.blockNumber}</TableCell>
                   <TableCell>{new Date(transaction.raw_data.timestamp).toLocaleDateString()}</TableCell>
                   <TableCell>{transaction.raw_data.contract[0].parameter.value.owner_address}</TableCell>
@@ -72,6 +67,7 @@ const ContractsTrans: React.FC = () => {
           </Table>
         </TableContainer>
       </div>
+      <CollaboratorsComponent></CollaboratorsComponent>
     </div>
   );
 };

@@ -12,6 +12,8 @@ import HistoryBlock from './pages/block-history/BlockHistoryPage';
 import {HomePage} from "./pages/home/HomePage";
 import DeleteAccount from "./pages/delete/DeleteAccount";
 import ContractsPage from "./pages/contracts/ContractsPage";
+import {CategoriesPage} from "./pages/categories/CategoriesPage";
+import {CategoriesDetailPage} from "./pages/categories/detail/CategoriesDetailPage";
 import ContractsTrans from './pages/contracts/Contract_transactions/ContractsTrans';
 
 const root = ReactDOM.createRoot(
@@ -21,6 +23,8 @@ const root = ReactDOM.createRoot(
 root.render(
     <BrowserRouter>
         <Routes>
+            <Route path={RoutesConstants.CATEGORIZED_TRANSACTIONS_DETAIL} element={<CategoriesDetailPage/>}/>
+            <Route path={RoutesConstants.CATEGORIZED_TRANSACTIONS} element={<CategoriesPage/>}/>
             <Route path={RoutesConstants.TRC20_CONTRACTS} element={<ContractsPage/>}/>
             <Route path={RoutesConstants.LOGIN} element={<LoginPage/>}></Route>
             <Route path={RoutesConstants.CONTRACT_TRANSACTIONS} element={<ContractsTrans/>}></Route>

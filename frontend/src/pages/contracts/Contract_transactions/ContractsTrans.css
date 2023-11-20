@@ -4,13 +4,16 @@
     display: grid;
     grid-template-columns: 15% 85%;
     grid-template-rows: 88% 12%;
-  }
-  
-  .content-container {
+}
+
+.content-container {
     padding: 20px;
-  }
-  
-  .table-container {
+    grid-row: 1/2;
+    max-height: 100%;
+}
+
+.table-container {
+    height: 100%;
     margin-top: 20px;
-  }
+}
   
