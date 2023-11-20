@@ -14,13 +14,13 @@
 | 10 | Eliminar cuenta del usuario.                                                                                                                                   | Privada | Omar      | 05      |
 | 11 | Generar un Qr con la address de la blockchain de Tron para que se pueda escanear en otras wallets.                                                             | Pública | Russbell  | 05      |
 | 12 | Apartado para validar una address, permíte al usuario saber si una address hace parte de la red de TRON.                                                       | Pública | Santiago  | 05      |
-| 13 | Generar gráficos relacionados con las transacciones sin categorizar por fechas (Histograma).                                                                   | Privada | Russbell  | 06      |
+| 13 | Generar gráfico relacionados con las transacciones sin categorizar por fechas en trx.                                                                   | Privada | Russbell  | 06      |
 | 14 | Filtrar el historico de transacciones por destinatario y address de salida.                                                                                    | Privada | Omar      | 06      |
 | 15 | Obtener, válidar y guardar la dirección de un contrato inteligente en formato TRC20 en la base de datos.                                                       | Privada | Santiago  | 06      |
 | 16 | Visualizar contratos en formato TRC20 agregados                                                                                                                | Privada | Santiago  | 06      |
 | 17 | Visualizar el historico de transacciones realizadas en algún contrato inteligente previamente guardado.                                                        | Privada | Omar      | 06      |
 | 18 | Descargar gráficos generados.                                                                                                                                  | Privada | Russbell  | 06      |
-| 19 | Dar al usuario la opción de categorizar una transacción (Comida, Ocio, Inmuebles, Tecnología, etc...), además puede agregar una descripción de la transacción. | Privada | Russbell  | 06      |
+| 19 | Generar gráfico interactivo para ver transaccione en usd | Privada | Russbell  | 06      |
 | 20 | Visualizar las transacciones previamente categorizadas y sus descripciones.                                                                                    | Privada | Santiago  | 06      |
 | 21 | Generar gráficos relacionados con las transacciones categorizadas (Gráfico de torta, Diagrama de barras, etc...)                                               | Privada | Omar      | 06      |
 | 22 | Generar datos estadísticos básicos con las transacciones categorizadas como promedios, medianas, sumas, máximos, mínimos y segmentar por categoría.            | Privada | Santiago  | 07      |
