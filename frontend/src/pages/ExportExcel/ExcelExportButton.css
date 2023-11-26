@@ -1,0 +1,14 @@
+.container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .checkbox-group {
+    display: flex;
+    gap: 5px;
+  }
+  
+  .checkbox-label {
+    flex-basis: 50%;
+  }
