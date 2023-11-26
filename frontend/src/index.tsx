@@ -15,6 +15,7 @@ import ContractsPage from "./pages/contracts/ContractsPage";
 import {CategoriesPage} from "./pages/categories/CategoriesPage";
 import {CategoriesDetailPage} from "./pages/categories/detail/CategoriesDetailPage";
 import ContractsTrans from './pages/contracts/Contract_transactions/ContractsTrans';
+import DataTreatment from './pages/DataTreatment/DataTreatment';
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
@@ -32,6 +33,7 @@ root.render(
             <Route path={RoutesConstants.BLOCK_HISTORY} element={<HistoryBlock/>}></Route>
             <Route path={RoutesConstants.BLOCK_TRANSACTIONS} element={<BlockTransactionsPage/>}></Route>
             <Route path={RoutesConstants.TRX_TRANSACTIONS} element={<TrxTransactionsPage/>}></Route>
+            <Route path={RoutesConstants.DATA_TREAT} element={<DataTreatment/>}></Route>
             <Route path={RoutesConstants.DELETE} element={<DeleteAccount/>}></Route>
             <Route path={RoutesConstants.HOME} element={<HomePage/>}></Route>
         </Routes>
