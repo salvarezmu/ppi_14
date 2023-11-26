@@ -11,7 +11,6 @@ const ExcelExportButton: React.FC<ExcelExportButtonProps> = ({ address }) => {
   const [selectedCategories, setSelectedCategories] = useState<string[]>(['txID', 'amount', 'timestamp', 'from', 'to', 'type']);
 
   const handleCategoryChange = (category: string) => {
-    // Toggle category selection
     setSelectedCategories(prevSelected => {
       if (prevSelected.includes(category)) {
         return prevSelected.filter(cat => cat !== category);
@@ -22,7 +21,6 @@ const ExcelExportButton: React.FC<ExcelExportButtonProps> = ({ address }) => {
   };
 
   const handleExportToExcel = () => {
-    // Construct the API request URL with selected categories
     const apiUrl = `/api/v1/tronapi/export-to-excel/${address}/?categories=${selectedCategories.join(',')}`;
 
     axios.get(apiUrl, { responseType: 'blob', baseURL: process.env.REACT_APP_BASE_URL })

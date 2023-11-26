@@ -453,63 +453,63 @@ def export_to_excel(request, address):
     """
     Exporta transacciones relacionadas con la dirección Tron a un archivo Excel.
 
-    Parameters:
+    Parámetros:
         - request: La solicitud HTTP recibida.
         - address (str): La dirección Tron para la cual se obtendrán las transacciones.
 
-    Returns:
+    Retorna:
         - HttpResponse: Una respuesta HTTP con el archivo Excel adjunto o una respuesta JSON vacía.
 
-    Raises:
-        - No specific exceptions raised.
+    Excepciones:
+        - No se generan excepciones específicas.
 
     """
     
-    # Obtain selected categories from query parameters
+    # Obtener las categorías seleccionadas de los parámetros de la consulta
     selected_categories = request.query_params.get('categories', '').split(',')
 
-    # Build the URL to get transactions from the Tron API
+    # Construir la URL para obtener transacciones desde la API de Tron
     url = TronApiConstants.GET_TRANSACTIONS_URL.value.replace(TronApiConstants.REPLACE_ADDRESS_PARAM.value, address)
     params = {}
 
-    # Get transaction data from the Tron API
+    # Obtener datos de transacciones desde la API de Tron
     raw_response = requests.get(url, params=params).json()['data']
 
     if raw_response:
-        # Map and process the response to obtain relevant data
+        # Mapear y procesar la respuesta para obtener datos relevantes
         data = TronApiUtils.map_get_trx_transactions_response(raw_response)
         data['amount'] = data['amount'] / TronApiConstants.SUN_TO_TRX.value
         data['from'] = TronApiUtils.hex_address_to_base58(data['from'])
         data['to'] = TronApiUtils.hex_address_to_base58(data['to'])
         data['type'] = np.where(data['to'] == address, 'Entrada', 'Salida')
 
-        # Filter data based on selected categories
+        # Filtrar datos según las categorías seleccionadas
         data = data[selected_categories]
 
-        # Create a pandas DataFrame
+        # Crear un DataFrame de pandas
         df = pd.DataFrame(data)
 
-        # Create an Excel workbook and add the DataFrame as a sheet
+        # Crear un libro de trabajo de Excel y agregar el DataFrame como una hoja
         wb = Workbook()
         ws = wb.active
 
-        # Write DataFrame columns as headers
+        # Escribir las columnas del DataFrame como encabezados
         for col_num, header in enumerate(df.columns, 1):
             ws.cell(row=1, column=col_num, value=header)
 
-        # Write DataFrame values to the sheet
+        # Escribir los valores del DataFrame en la hoja
         for r_idx, row in enumerate(df.iterrows(), 2):
             for c_idx, value in enumerate(row[1], 1):
                 ws.cell(row=r_idx, column=c_idx, value=value)
 
-        # Create the HTTP response
+        # Crear la respuesta HTTP
         response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = f'attachment; filename=tron_pulse_{address}.xlsx'
 
-        # Save the workbook and write the response
+        # Guardar el libro de trabajo y escribir la respuesta
         wb.save(response)
 
         return response
     else:
-        # If there is no data, return an empty JSON response
+        # Si no hay datos, devolver una respuesta JSON vacía
         return ApiUtils.build_generic_response({'transactions': [], 'statistics': {}})
