@@ -80,53 +80,66 @@ export class HomePage extends React.Component<unknown, State> {
                 <SideBarComponent>
                 </SideBarComponent>
                 <div className={"home-page-container"}>
-                    <Typography variant="h5" gutterBottom>
-                        Ingresa tu address:
-                    </Typography>
-                    <TextField
-                        style={{minWidth: '400px'}}
-                        required
-                        id="outlined-required"
-                        value={this.state.currentAddress}
-                        onChange={this.setAddress}
-                        onKeyUp={this.validateAddress}
-                    />
-                    <div id={'home-page-acctions'} style={{marginTop: '10px', display: 'none'}}>
-                        <Link to={RoutesConstants.TRX_TRANSACTIONS} state={{propAddress: this.state.currentAddress}}>
-                            <Button variant="contained">Transacciones</Button>
-                        </Link>
+                    <div className={"home-page-text"}>
+                        <p style={{textAlign: 'center', fontWeight: 'bold'}}>¡Te doy la bienvenida a TRON Pulse!</p>
+                        <p>Nuestra aplicación te sumerge en el fascinante mundo de la blockchain Tron, permitiéndote explorar y consultar las transacciones de TRX de manera detallada. Además, podrás generar códigos QR, obtener estadísticas básicas y crear archivos Excel con la información relevante. ¿Interesado en conocer los bloques de la red? ¡También podrás hacerlo con facilidad! Y eso no es todo, podrás personalizar tu experiencia añadiendo tus tokens favoritos y consultando sus transacciones de manera sencilla.</p>
+                        <p>Si deseas explorar una dirección específica o comenzar a descubrir todo lo que ofrece Tron, entra a:</p>
+                        <p><a style={{fontWeight: 'bold'}} href={"https://shasta.tronscan.org/#/"} target={"_blank"}>SHASTA</a></p>
+                    </div>
+                    <div className={"home-page-address-container"}>
+                        <Typography variant="h5" gutterBottom>
+                            Ingresa una address
+                        </Typography>
+                        <TextField
+                            style={{minWidth: '400px'}}
+                            required
+                            id="outlined-required"
+                            value={this.state.currentAddress}
+                            onChange={this.setAddress}
+                            onKeyUp={this.validateAddress}
+                        />
+                        <div id={'home-page-acctions'} style={{marginTop: '10px', display: 'none'}}>
+                            <Link to={RoutesConstants.TRX_TRANSACTIONS}
+                                  state={{propAddress: this.state.currentAddress}}>
+                                <Button variant="contained">Transacciones</Button>
+                            </Link>
 
 
-                        <Button onClick={this.openQRModal} variant="contained" style={{marginLeft: '10px'}}>
-                            Qr
-                        </Button>
-                        <Modal
-                            isOpen={this.state.isQRModalOpen}
-                            onRequestClose={this.closeQRModal}
-                        >
-                            <div style={{textAlign: "center"}}>
-                                <div style={{
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    width: "100%",
-                                    height: "100%",
-                                }}>
-                                    <img
-                                        alt={this.state.qrCodeUrl}
-                                        src={this.state.qrCodeUrl}
-                                        style={{
-                                            width: "500px", // Ajusta el tamaño del código QR según tus necesidades
-                                            height: "400px",
-                                        }}
-                                    />
+                            <Button onClick={this.openQRModal} variant="contained" style={{marginLeft: '10px'}}>
+                                Qr
+                            </Button>
+                            <Modal
+                                isOpen={this.state.isQRModalOpen}
+                                onRequestClose={this.closeQRModal}
+                            >
+                                <div style={{textAlign: "center"}}>
+                                    <div style={{
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        width: "100%",
+                                        height: "100%",
+
+                                    }}>
+                                        <img
+                                            alt={this.state.qrCodeUrl}
+                                            src={this.state.qrCodeUrl}
+                                            style={{
+                                                width: "500px", // Ajusta el tamaño del código QR según tus necesidades
+                                                height: "400px",
+                                            }}
+                                        />
+                                    </div>
+                                    <div style={{marginTop: "10px"}}>
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            className="backButton"
+                                            onClick={this.closeQRModal}>Cerrar</Button>
+                                    </div>
                                 </div>
-                                <div style={{marginTop: "10px"}}>
-                                    <button onClick={this.closeQRModal}>Cerrar</button>
-                                </div>
-                            </div>
-                        </Modal>
-
+                            </Modal>
+                        </div>
                     </div>
                 </div>
                 <CollaboratorsComponent></CollaboratorsComponent>

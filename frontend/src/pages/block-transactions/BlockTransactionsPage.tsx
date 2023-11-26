@@ -1,16 +1,18 @@
 import React, {useState} from 'react';
 import {
+    Backdrop,
     Button,
-    TextField,
+    CircularProgress,
+    Paper,
     Table,
-    TableHead,
     TableBody,
-    TableRow,
     TableCell,
     TableContainer,
-    Paper,
+    TableHead,
+    TableRow,
+    TextField,
     Typography,
-    useTheme, Backdrop, CircularProgress,
+    useTheme,
 } from '@mui/material';
 import SideBarComponent from "../../components/sidebar/SideBarComponent";
 import CollaboratorsComponent from "../../components/collaborators/CollaboratorsComponent";
@@ -48,7 +50,7 @@ const BlockTransactionsPage = () => {
             const params = {requiresUSD: login.isLogged, token: login.access_token};
             const response = await AxiosUtils.get<GetBlockTransactionsRes>(apiUrl, undefined, params);
             const data = response.data;
-            if (!data || data.transactions.length < 0) {
+            if (!data || data.transactions.length <= 0) {
                 setError(`No se encontraron transacciones en el bloque #${blockNumber}`);
                 setLoading(false);
                 return;
@@ -91,31 +93,29 @@ const BlockTransactionsPage = () => {
                     Obtener Transacciones
                 </Button>
                 <div>
-                    {error && <Typography variant="h6" color="error">{error}</Typography>}
-                    {transactions.length > 0 && (
-                        <TableContainer component={Paper} style={{marginTop: '16px'}}>
-                            <Table>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell>ID de Transacción</TableCell>
-                                        <TableCell>Costo</TableCell>
-                                        <TableCell>USD</TableCell>
-                                        <TableCell>Fecha</TableCell>
+                    {error && <Typography style={{marginLeft: '10px'}} variant="h6" color="error">{error}</Typography>}
+                    <TableContainer component={Paper} style={{marginTop: '16px'}}>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>ID de Transacción</TableCell>
+                                    <TableCell>Costo</TableCell>
+                                    <TableCell>USD</TableCell>
+                                    <TableCell>Fecha</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {transactions.map((transaction, index) => (
+                                    <TableRow key={index}>
+                                        <TableCell>{transaction[0]}</TableCell>
+                                        <TableCell>{transaction[1]}</TableCell>
+                                        <TableCell>{login.isLogged ? transaction[3].toFixed(4) + ' $' : ''}</TableCell>
+                                        <TableCell>{new Date(transaction[2]).toLocaleString()}</TableCell>
                                     </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {transactions.map((transaction, index) => (
-                                        <TableRow key={index}>
-                                            <TableCell>{transaction[0]}</TableCell>
-                                            <TableCell>{transaction[1]}</TableCell>
-                                            <TableCell>{login.isLogged ? transaction[3].toFixed(4) + ' $' : ''}</TableCell>
-                                            <TableCell>{new Date(transaction[2]).toLocaleString()}</TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                    )}
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
                 </div>
             </div>
             <CollaboratorsComponent></CollaboratorsComponent>

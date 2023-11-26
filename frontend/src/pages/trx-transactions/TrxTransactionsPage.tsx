@@ -44,7 +44,7 @@ import {
 } from 'recharts';
 import html2canvas from "html2canvas";
 import {saveAs} from "file-saver";
-import ExcelExportButton from "../ExportExcel/ExcelExportButton";
+import ExcelExport from "../../components/export-excel/ExcelExport";
 import TransactionsFilter from "../../components/transactions-filter/TransactionsFilter";
 
 const TrxTransactionsPage = () => {
@@ -248,14 +248,14 @@ const TrxTransactionsPage = () => {
 
     const BuildHistogram = () => {
         const ref = useRef<HTMLDivElement>(null);
-        if (transactions && login.isLogged) {
+        if (transactions && transactions.length > 0 && login.isLogged) {
             return (
                 <div>
                     <Button
                         variant="contained"
                         onClick={() => setIsOpen(true)}
                         style={{marginLeft: '6px', height: '35px', marginTop: '10px', marginBottom: '10px'}}>
-                        Ver gráfico
+                        Gráfico
                     </Button>
 
                     <Modal
@@ -292,8 +292,7 @@ const TrxTransactionsPage = () => {
                         </Button>
 
                         <div>
-                            <div ref={ref}
-                                 style={{marginLeft: '30%'}}>{generateGraph()}</div>
+                            <div ref={ref} style={{marginLeft: '30%'}}>{generateGraph()}</div>
                         </div>
 
                     </Modal>
@@ -344,6 +343,7 @@ const TrxTransactionsPage = () => {
                         <div className={"trx-transactions-page-header-info-actions"}>
                             <div className={"trx-transactions-page-header-info-actions-input"}>
                                 <TextField
+                                    maxRows={40}
                                     id={"set-address-input"}
                                     style={{marginLeft: '10px'}}
                                     variant="outlined"
@@ -366,12 +366,12 @@ const TrxTransactionsPage = () => {
                             >
                                 Filtrar
                             </Button>
-                            <ExcelExportButton address={currentAddress}/>
+                            {BuildHistogram()}
+                            {transactions.length > 0 ? <ExcelExport address={currentAddress}/> : <></>}
                         </div>
                     </div>
                     {buildStatistics()}
                     {showBalance()}
-                    {BuildHistogram()}
                 </div>
                 <div>
                     {buildTable(login.isLogged)}

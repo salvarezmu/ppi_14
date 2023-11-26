@@ -1,9 +1,9 @@
 export enum ModuleNamesConstants {
     HOME = 'Inicio',
-    TRANSACTIONS = 'Transacciones - TRX',
-    BLOCK_TRANSACTIONS = 'Block Transactions',
-    BLOCK_HISTORY = 'Block History',
-    TRC20_CONTRACTS = 'Contracts',
-    TRC20_CONTRACT_TRANSACTIONS = 'Contract Trans',
-    CATEGORIZED_TRANSACTIONS = 'Categorias',
+    TRANSACTIONS = 'Transacciones de TRX',
+    BLOCK_TRANSACTIONS = 'Transacciones de bloque',
+    BLOCK_HISTORY = 'Historial de Bloques',
+    TRC20_CONTRACTS = 'Tokens favoritos',
+    TRC20_CONTRACT_TRANSACTIONS = 'Transacciones de tokens',
+    CATEGORIZED_TRANSACTIONS = 'Categorías',
 }

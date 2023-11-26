@@ -5,12 +5,10 @@ import {
     Backdrop,
     Button,
     CircularProgress,
-    createSvgIcon,
     Dialog,
     DialogActions,
     DialogContent,
     DialogTitle,
-    IconButton,
     Paper,
     Snackbar,
     Table,
@@ -50,8 +48,8 @@ function ContractsPage() {
                 const apiUrl: string = BackendConstants.GET_ALL_CONTRACTS;
                 const response = await AxiosUtils.get<GetAllUserContractsRes>(apiUrl, undefined, params);
                 const data = response.data;
-                if (!data) {
-                    setError(`Error al obtener los contratos.`);
+                if (!data || data.contracts.length == 0) {
+                    setError(`No tienes tokens favoritos`);
                     setLoading(false);
                     return;
                 }
@@ -114,29 +112,27 @@ function ContractsPage() {
                     Agregar
                 </Button>
                 <div>
-                    {error && <Typography variant="h6" color="error">{error}</Typography>}
-                    {contracts.length > 0 && (
-                        <TableContainer component={Paper} style={{marginTop: '16px'}}>
-                            <Table>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell>ID</TableCell>
-                                        <TableCell>Nombre</TableCell>
-                                        <TableCell>Dirección</TableCell>
+                    {error && <Typography style={{marginLeft: '10px'}}variant="h6" color="error">{error}</Typography>}
+                    <TableContainer component={Paper} style={{marginTop: '16px'}}>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>ID</TableCell>
+                                    <TableCell>Nombre</TableCell>
+                                    <TableCell>Dirección</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {contracts.map((contract, index) => (
+                                    <TableRow key={index}>
+                                        <TableCell>{contract.id}</TableCell>
+                                        <TableCell>{contract.name}</TableCell>
+                                        <TableCell>{contract.address}</TableCell>
                                     </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {contracts.map((contract, index) => (
-                                        <TableRow key={index}>
-                                            <TableCell>{contract.id}</TableCell>
-                                            <TableCell>{contract.name}</TableCell>
-                                            <TableCell>{contract.address}</TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                    )}
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
                 </div>
             </div>
             <CollaboratorsComponent></CollaboratorsComponent>

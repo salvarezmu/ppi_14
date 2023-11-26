@@ -45,7 +45,7 @@
 .trx-transactions-page-header-info-actions-input{
     display: flex;
     flex-flow: column;
-    width: 40%;
+    width: 50%;
 }
 
 #trx-transactions-page-header-balance {
