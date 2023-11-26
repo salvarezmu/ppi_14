@@ -464,49 +464,52 @@ def export_to_excel(request, address):
         - No specific exceptions raised.
 
     """
+    
+    # Obtain selected categories from query parameters
+    selected_categories = request.query_params.get('categories', '').split(',')
 
-    # Construir la URL para obtener transacciones desde la API de Tron
+    # Build the URL to get transactions from the Tron API
     url = TronApiConstants.GET_TRANSACTIONS_URL.value.replace(TronApiConstants.REPLACE_ADDRESS_PARAM.value, address)
     params = {}
 
-    # Obtener datos de transacciones desde la API de Tron
+    # Get transaction data from the Tron API
     raw_response = requests.get(url, params=params).json()['data']
 
     if raw_response:
-        # Mapear y procesar la respuesta para obtener datos relevantes
+        # Map and process the response to obtain relevant data
         data = TronApiUtils.map_get_trx_transactions_response(raw_response)
         data['amount'] = data['amount'] / TronApiConstants.SUN_TO_TRX.value
         data['from'] = TronApiUtils.hex_address_to_base58(data['from'])
         data['to'] = TronApiUtils.hex_address_to_base58(data['to'])
         data['type'] = np.where(data['to'] == address, 'Entrada', 'Salida')
 
-        # Crear un DataFrame de pandas
+        # Filter data based on selected categories
+        data = data[selected_categories]
+
+        # Create a pandas DataFrame
         df = pd.DataFrame(data)
 
-        # Crear un libro de trabajo de Excel y agregar el DataFrame como una hoja
+        # Create an Excel workbook and add the DataFrame as a sheet
         wb = Workbook()
         ws = wb.active
-        for r_idx, row in enumerate(df.iterrows(), 1):
+
+        # Write DataFrame columns as headers
+        for col_num, header in enumerate(df.columns, 1):
+            ws.cell(row=1, column=col_num, value=header)
+
+        # Write DataFrame values to the sheet
+        for r_idx, row in enumerate(df.iterrows(), 2):
             for c_idx, value in enumerate(row[1], 1):
                 ws.cell(row=r_idx, column=c_idx, value=value)
 
-        # Configurar encabezados y título
-        headers = ['Fecha', 'Cantidad', 'De', 'A', 'Tipo']
-        for col_num, header in enumerate(headers, 1):
-            ws.cell(row=1, column=col_num, value=header)
-
-        # Configurar el título
-        ws.merge_cells(start_row=1, start_column=1, end_row=1, end_column=len(headers))
-        ws['A1'] = 'Tron Pulse'
-
-        # Crear la respuesta HTTP
+        # Create the HTTP response
         response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = f'attachment; filename=tron_pulse_{address}.xlsx'
 
-        # Guardar el libro de trabajo y escribir la respuesta
+        # Save the workbook and write the response
         wb.save(response)
 
         return response
     else:
-        # Si no hay datos, devolver una respuesta JSON vacía
+        # If there is no data, return an empty JSON response
         return ApiUtils.build_generic_response({'transactions': [], 'statistics': {}})
