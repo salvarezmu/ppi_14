@@ -1,16 +1,20 @@
 import React, {useState} from 'react';
 import {
+    Backdrop,
     Button,
-    TextField,
+    CircularProgress,
+    createSvgIcon,
+    IconButton,
+    Paper,
     Table,
-    TableHead,
     TableBody,
-    TableRow,
     TableCell,
     TableContainer,
-    Paper,
+    TableHead,
+    TableRow,
+    TextField,
     Typography,
-    useTheme, CircularProgress, Backdrop, IconButton, createSvgIcon,
+    useTheme,
 } from '@mui/material';
 import SideBarComponent from "../../components/sidebar/SideBarComponent";
 import CollaboratorsComponent from "../../components/collaborators/CollaboratorsComponent";
@@ -20,6 +24,7 @@ import {GetBlockHistoryRes} from "../../types/responses/GetBlockHistoryRes";
 import './BlockHistoryPage.css';
 import {Link} from "react-router-dom";
 import {RoutesConstants} from "../../constants/RoutesConstants";
+import CallMadeIcon from '@mui/icons-material/CallMade';
 
 const HistoryBlock: React.FC = () => {
     useTheme();
@@ -52,8 +57,8 @@ const HistoryBlock: React.FC = () => {
             const response = await AxiosUtils.get<GetBlockHistoryRes>(apiUrl);
             const data = response.data;
 
-            if (!data || data.blocks.length < 0) {
-                setError(`No se encontraron bloques.`);
+            if (!data || data.blocks.length <= 0) {
+                setError(`No se encontraron bloques`);
                 setLoading(false);
                 return;
             }
@@ -93,44 +98,43 @@ const HistoryBlock: React.FC = () => {
                     Obtener Bloques
                 </Button>
                 <div className={"history-blocks-page-container"}>
-                    {error && <Typography variant="h6" color="error">{error}</Typography>}
-                    {blocks.length > 0 && (
-                        <TableContainer component={Paper} style={{marginTop: '16px'}}>
-                            <Table>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell>ID de Bloque</TableCell>
-                                        <TableCell>Numero</TableCell>
-                                        <TableCell>Transacciones</TableCell>
-                                        <TableCell>Timestamp del Bloque</TableCell>
-                                        <TableCell>Acciones</TableCell>
+                    {error && <Typography style={{marginLeft: '10px'}}variant="h6" color="error">{error}</Typography>}
+                    <TableContainer component={Paper} style={{marginTop: '16px'}}>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>ID de Bloque</TableCell>
+                                    <TableCell>Numero</TableCell>
+                                    <TableCell>Transacciones</TableCell>
+                                    <TableCell>Timestamp del Bloque</TableCell>
+                                    <TableCell>Acciones</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {blocks.map((block, index) => (
+                                    <TableRow key={index}>
+                                        <TableCell style={{
+                                            cursor: 'copy',
+                                            maxWidth: 200,
+                                            overflow: 'hidden'
+                                        }}>{block[0]}</TableCell>
+                                        <TableCell>{block[1]}</TableCell>
+                                        <TableCell>{block[3]}</TableCell>
+                                        <TableCell>{new Date(block[2]).toLocaleString()}</TableCell>
+                                        <TableCell>
+                                            {block[3] > 0 ? <Link to={RoutesConstants.BLOCK_TRANSACTIONS}
+                                                                  state={{blockNumber: block[1]}}
+                                                                  style={{width: 'max-content'}}>
+                                                <IconButton aria-label="delete">
+                                                    <PlusIcon></PlusIcon>
+                                                </IconButton>
+                                            </Link> : <a href={"https://shasta.tronscan.org/#/block/" + block[1]} target={"_blank"}><IconButton><CallMadeIcon></CallMadeIcon></IconButton></a>}
+                                        </TableCell>
                                     </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {blocks.map((block, index) => (
-                                        <TableRow key={index}>
-                                            <TableCell style={{
-                                                cursor: 'copy',
-                                                maxWidth: 200,
-                                                overflow: 'hidden'
-                                            }}>{block[0]}</TableCell>
-                                            <TableCell>{block[1]}</TableCell>
-                                            <TableCell>{block[3]}</TableCell>
-                                            <TableCell>{new Date(block[2]).toLocaleString()}</TableCell>
-                                            <TableCell>
-                                                {block[3] > 0 ? <Link to={RoutesConstants.BLOCK_TRANSACTIONS}
-                                                                      state={{blockNumber: block[1]}}>
-                                                    <IconButton aria-label="delete">
-                                                        <PlusIcon></PlusIcon>
-                                                    </IconButton>
-                                                </Link> : <></>}
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                    )}
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
                 </div>
             </div>
             <CollaboratorsComponent></CollaboratorsComponent>

@@ -1,0 +1,30 @@
+.data-treatment-container {
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.1);
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    z-index: 999;
+}
+
+.container-2 {
+    box-sizing: border-box;
+    padding: 50px;
+    width: 50%;
+    background-color: white;
+    height: 90%;
+    border-radius: 10px;
+    overflow-y: auto;
+}
+
+.section {
+    margin-bottom: 24px;
+}
+
+.backButton {
+    margin-top: 16px;
+}
+  

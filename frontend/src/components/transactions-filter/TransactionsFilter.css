@@ -1,0 +1,28 @@
+#show-filters-container {
+    background-color: rgba(0, 0, 0, 0.2);
+    background-repeat: no-repeat;
+    z-index: 999;
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#show-filters-container-form {
+    text-align: center;
+    background-color: white;
+    width: 500px;
+    height: max-content;
+    box-sizing: border-box;
+    padding: 20px;
+    border-radius: 5px;
+    display: flex;
+    flex-flow: column;
+    row-gap: 20px;
+}
+
+.buttons-transactions-filter{
+    width: 100%;
+}

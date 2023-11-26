@@ -44,12 +44,15 @@ import {
 } from 'recharts';
 import html2canvas from "html2canvas";
 import {saveAs} from "file-saver";
-import ExcelExportButton from "../ExportExcel/ExcelExportButton";
+import ExcelExport from "../../components/export-excel/ExcelExport";
+import TransactionsFilter from "../../components/transactions-filter/TransactionsFilter";
 
 const TrxTransactionsPage = () => {
 
+    const login = GenericUtils.resolveLogin();
     const stateAddress = useLocation().state?.propAddress;
     const [loading, setLoading] = useState<boolean>(false);
+    const [showFilters, setShowFilters] = useState(false);
     const [balance, setBalance] = useState<number>(-1);
     const [USDBalance, setUSDBalance] = useState<number>(-1);
     const [currentAddress, setCurrentAddress] = useState<string>(stateAddress || '');
@@ -57,8 +60,7 @@ const TrxTransactionsPage = () => {
     const [startDate, setStartDate] = useState<string>('');
     const [endDate, setEndDate] = useState<string>('');
     const [statistics, setStatistics] = useState<BasicStatistics | null>(null);
-
-    // Nuevos estados de filtro
+    const [modalIsOpen, setIsOpen] = useState(false);
     const [filterRecipient, setFilterRecipient] = useState<string>('');
     const [filterSender, setFilterSender] = useState<string>('');
 
@@ -66,8 +68,8 @@ const TrxTransactionsPage = () => {
         if (balance >= 0) {
             return (
                 <div id={"trx-transactions-page-header-balance"}>
-                    <p>Balance: {`${balance} ${CoinSymbolConstants.TRX}`}</p>
-                    <p>USD: {USDBalance >= 0 ? USDBalance.toFixed(4) + '$' : 'Inicia sesión para conocerlo.'}</p>
+                    <p className={"p-balance"}>Balance: {`${balance} ${CoinSymbolConstants.TRX}`}</p>
+                    <p className={"p-balance"}>USD: {USDBalance >= 0 ? USDBalance.toFixed(4) + '$' : 'Inicia sesión para conocerlo.'}</p>
                 </div>);
         }
     }
@@ -103,7 +105,6 @@ const TrxTransactionsPage = () => {
     }
 
     const getData = async (addressParam: string, requiresUSD = false, token: string | null = null) => {
-        const address: string = addressParam;
         if (!GenericUtils.validateAddress(addressParam)) {
             window.alert(ErrorsConstants.INVALID_ADDRESS_ERROR);
             return;
@@ -112,21 +113,24 @@ const TrxTransactionsPage = () => {
         let initTimestamp, finalTimestamp;
         if (startDate) initTimestamp = new Date(startDate).valueOf();
         if (endDate) finalTimestamp = new Date(endDate).valueOf();
-        const {balance, USDBalance} = await getBalances(address, requiresUSD, token);
-        const allTransactions = await getTransactions(address, requiresUSD, token, initTimestamp, finalTimestamp);
+        const {balance, USDBalance} = await getBalances(addressParam, requiresUSD, token);
+        const allTransactions = await getTransactions(addressParam, requiresUSD, token, initTimestamp, finalTimestamp);
 
-        // Aplicar filtros
         const filteredTransactions = allTransactions.data.transactions.filter(transaction => {
             const recipientMatch = transaction[4].toLowerCase().includes(filterRecipient.toLowerCase());
             const senderMatch = transaction[3].toLowerCase().includes(filterSender.toLowerCase());
             return recipientMatch && senderMatch;
         });
 
-        setCurrentAddress(address);
+        setCurrentAddress(addressParam);
         setBalance(balance);
         setUSDBalance(USDBalance);
         setTransactions(filteredTransactions);
         setStatistics(allTransactions.data.statistics);
+        setStartDate('');
+        setEndDate('');
+        setFilterSender('');
+        setFilterRecipient('');
         setLoading(false);
     };
 
@@ -169,16 +173,6 @@ const TrxTransactionsPage = () => {
             });
         });
     };
-
-    const [modalIsOpen, setIsOpen] = useState(false);
-
-    function openHistogram() {
-        setIsOpen(true);
-    };
-
-    function closeHistogram() {
-        setIsOpen(false);
-    }
 
 
     const generateGraph = () => {
@@ -254,19 +248,19 @@ const TrxTransactionsPage = () => {
 
     const BuildHistogram = () => {
         const ref = useRef<HTMLDivElement>(null);
-        if (transactions && login.isLogged) {
+        if (transactions && transactions.length > 0 && login.isLogged) {
             return (
                 <div>
                     <Button
                         variant="contained"
-                        onClick={openHistogram}
+                        onClick={() => setIsOpen(true)}
                         style={{marginLeft: '6px', height: '35px', marginTop: '10px', marginBottom: '10px'}}>
-                        Ver gráfico
+                        Gráfico
                     </Button>
 
                     <Modal
                         isOpen={modalIsOpen}
-                        onRequestClose={closeHistogram}
+                        onRequestClose={() => setIsOpen(false)}
                         contentLabel="Gráfico"
                     >
 
@@ -280,7 +274,7 @@ const TrxTransactionsPage = () => {
                                 marginBottom: '10px',
                                 backgroundColor: 'red'
                             }}
-                            onClick={closeHistogram}
+                            onClick={() => setIsOpen(false)}
                         >
                             Cerrar
                         </Button>
@@ -298,8 +292,7 @@ const TrxTransactionsPage = () => {
                         </Button>
 
                         <div>
-                            <div ref={ref}
-                                 style={{marginLeft: '30%'}}>{generateGraph()}</div>
+                            <div ref={ref} style={{marginLeft: '30%'}}>{generateGraph()}</div>
                         </div>
 
                     </Modal>
@@ -340,24 +333,6 @@ const TrxTransactionsPage = () => {
         );
     }
 
-    const handleStartDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setStartDate(e.target.value);
-    }
-
-    const handleEndDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setEndDate(e.target.value);
-    }
-
-    const changeInput = (e: any) => {
-        setCurrentAddress(e.target.value)
-    }
-
-    const login = GenericUtils.resolveLogin()
-    if (login.isLogged && login.user && !currentAddress) {
-        setCurrentAddress(stateAddress || login.user.default_address);
-        getData(login.user.default_address, true, login.access_token);
-    }
-
     return (
         <div className={"trx-transactions-page-father"}>
             <SideBarComponent>
@@ -368,16 +343,12 @@ const TrxTransactionsPage = () => {
                         <div className={"trx-transactions-page-header-info-actions"}>
                             <div className={"trx-transactions-page-header-info-actions-input"}>
                                 <TextField
+                                    maxRows={40}
+                                    id={"set-address-input"}
                                     style={{marginLeft: '10px'}}
                                     variant="outlined"
-                                    onChange={(e) => setFilterRecipient(e.target.value)}
-                                    placeholder="Filtrar por destinatario"
-                                />
-                                <TextField
-                                    style={{marginLeft: '10px'}}
-                                    variant="outlined"
-                                    onChange={(e) => setFilterSender(e.target.value)}
-                                    placeholder="Filtrar por dirección de salida"
+                                    onChange={(e) => setCurrentAddress(e.target.value)}
+                                    placeholder="Address"
                                 />
                                 <small style={{marginLeft: '10px'}}>Dirección actual: {currentAddress}</small>
                             </div>
@@ -388,28 +359,19 @@ const TrxTransactionsPage = () => {
                             >
                                 Buscar
                             </Button>
-                            <ExcelExportButton address={currentAddress}/>
-                        </div>
-                        <div>
-                            <input
-                                type="date"
-                                placeholder="Fecha de inicio"
-                                value={startDate}
-                                style={{marginTop: '5px', marginLeft: '10px', height: '30px'}}
-                                onChange={handleStartDateChange}
-                            />
-                            <input
-                                type="date"
-                                style={{marginTop: '5px', marginLeft: '10px', height: '30px'}}
-                                placeholder="Fecha de fin"
-                                value={endDate}
-                                onChange={handleEndDateChange}
-                            />
+                            <Button
+                                onClick={() => setShowFilters(true)}
+                                variant="contained"
+                                style={{marginLeft: '5px', height: '35px'}}
+                            >
+                                Filtrar
+                            </Button>
+                            {BuildHistogram()}
+                            {transactions.length > 0 ? <ExcelExport address={currentAddress}/> : <></>}
                         </div>
                     </div>
                     {buildStatistics()}
                     {showBalance()}
-                    {BuildHistogram()}
                 </div>
                 <div>
                     {buildTable(login.isLogged)}
@@ -423,6 +385,16 @@ const TrxTransactionsPage = () => {
             >
                 <CircularProgress color="inherit"/>
             </Backdrop>
+            {showFilters ? <TransactionsFilter
+                getDataClickEvent={getDataClickEvent}
+                setFilterRecipient={setFilterRecipient}
+                endDate={endDate}
+                setFilterSender={setFilterSender}
+                setEndDate={setEndDate}
+                setStartDate={setStartDate}
+                startDate={startDate}
+                setShowFilters={setShowFilters}
+            ></TransactionsFilter> : <></>}
         </div>
     );
 }

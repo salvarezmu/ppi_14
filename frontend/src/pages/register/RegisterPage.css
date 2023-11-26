@@ -19,3 +19,8 @@
 .register-page-input{
     width: 100%;
 }
+
+.p-data-trearment{
+    text-decoration: underline;
+    color: blue;
+}

@@ -1,0 +1,44 @@
+.container-3 {
+    display: flex;
+    overflow:unset;
+    width: max-content;
+}
+
+.container-checkbox-group {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    z-index: 999;
+    background-color: rgba(0, 0, 0, 0.2);
+    background-repeat: no-repeat;
+    justify-content: center;
+    align-items: center;
+}
+
+.checkbox-group {
+    display: flex;
+    gap: 5px;
+    width: 400px;
+    height: max-content;
+    box-sizing: border-box;
+    padding: 20px;
+    border-radius: 5px;
+    background-color: white;
+}
+
+.checkbox-label {
+    width: 100%;
+    flex-basis: 50%;
+}
+
+.buttons-export-excell{
+    box-sizing: border-box;
+    padding-top: 30px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    column-gap: 5px;
+}
