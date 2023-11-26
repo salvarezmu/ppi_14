@@ -10,5 +10,6 @@ export enum RoutesConstants {
     TRC20_CONTRACTS = '/trc20/contract',
     CATEGORIZED_TRANSACTIONS = '/transactions-categories',
     CONTRACT_TRANSACTIONS = '/contract_transac',
-    CATEGORIZED_TRANSACTIONS_DETAIL = '/transactions-categories/detail'
+    CATEGORIZED_TRANSACTIONS_DETAIL = '/transactions-categories/detail',
+    DATA_TREAT = '/data_treatment'
 }

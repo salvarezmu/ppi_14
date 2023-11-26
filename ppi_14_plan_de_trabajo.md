@@ -22,7 +22,7 @@
 | 18 | Descargar gráficos generados.                                                                                    | Privada | Russbell  | 06      |
 | 19 | Generar gráfico interactivo para ver transaccione en usd                                                         | Privada | Russbell  | 06      |
 | 20 | Visualizar las transacciones previamente categorizadas y sus descripciones.                                      | Privada | Santiago  | 06      |
-| 21 | Generar gráficos relacionados con las transacciones categorizadas (Gráfico de torta, Diagrama de barras, etc...) | Privada | Omar      | 06      |
+| 21 | Generar un archivo de excell con los datos básicos del historico de transacciones.                               | Privada | Omar      | 06      |
 | 22 | Categorizar una transacción de TRON.                                                                             | Privada | Santiago  | 07      |
-| 23 | Generar un archivo de excell con los datos básicos del historico de transacciones.                               | Privada | Omar      | 07      |
-| 24 | Personalizar los campos que requiere el usuario en el archivo de excell.                                         | Privada | Russbell  | 07      |
+| 23 | Generar gráficos relacionados con las transacciones categorizadas (Gráfico de torta, Diagrama de barras, etc...) | Privada | Russbell  | 07      |
+| 24 | Personalizar los campos que requiere el usuario en el archivo de excel.                                          | Privada | Omar      | 07      |
