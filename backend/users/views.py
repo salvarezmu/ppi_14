@@ -8,6 +8,7 @@ from tronapi.views import validate_address_util
 from users.serializer import UserSerializer
 from .authentication import authenticate
 
+
 @api_view(['POST'])
 def register(request):
     """
@@ -32,26 +33,21 @@ def register(request):
     email = request.data.get('email')
     username = request.data.get('username')
     password = request.data.get('password')
-    default_address = request.data.get('defaultAddress')
 
     # Comprobar si los datos obligatorios están presentes
-    if (email is None) or (password is None) or (default_address is None) or (username is None):
+    if (email is None) or (password is None) or (username is None):
         return ApiUtils.build_bad_request_response()
 
     # Comprobar si el usuario ya existe en la base de datos
     if User.objects.filter(email=email).first():
         return ApiUtils.build_bad_request_response(ApiConstants.USER_ALREADY_EXISTS_ERROR)
 
-    # Validar la address predeterminada
-    if not validate_address_util(default_address):
-        return ApiUtils.build_bad_request_response(ApiConstants.INVALID_ADDRESS_ERROR)
-
     # Hashear la contraseña
     hashed = hashlib.sha256()
     hashed.update(password.encode('utf-8'))
 
     # Crear el usuario y guardarlo en la base de datos
-    user = User(email=email, username=username, password=hashed.hexdigest(), default_address=default_address)
+    user = User(email=email, username=username, password=hashed.hexdigest())
     user.save()
 
     # Serializar el usuario y generar un token de acceso
@@ -113,6 +109,7 @@ def login(request):
     access_token = ApiUtils.generate_access_token(user)
     return ApiUtils.build_generic_response({'access_token': access_token, 'user': serialized})
 
+
 @api_view(['DELETE'])
 def delete_account(request):
     """
@@ -136,7 +133,7 @@ def delete_account(request):
 
     # El usuario autenticado que realiza la solicitud
     user = User.objects.filter(id=decoded[1]['user_id']).first()
-    
+
     # Elimina la cuenta del usuario
     user.delete()
     return ApiUtils.build_generic_response({'message': 'Cuenta eliminada con éxito.'})

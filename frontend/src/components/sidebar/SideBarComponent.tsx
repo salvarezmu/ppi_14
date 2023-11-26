@@ -53,7 +53,7 @@ export class SideBarComponent extends React.Component<unknown, { redirect: boole
             isPrivate: true,
         },
         {
-            name: 'Contratos favoritos',
+            name: ModuleNamesConstants.TRC20_CONTRACT_TRANSACTIONS,
             to: RoutesConstants.CONTRACT_TRANSACTIONS,
             isPrivate: true,
         },

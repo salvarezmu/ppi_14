@@ -37,9 +37,8 @@ export class CollaboratorsComponent extends React.Component {
                     return (
                         <div className={"collaborator"} key={c.github_nickname}>
                             <a href={c.github_url}>
-                                <img src={c.image} className={"collaborator-image"}/>
+                                <img src={c.image} title={c.github_nickname} className={"collaborator-image"}/>
                             </a>
-                            <p>{c.github_nickname}</p>
                         </div>
                     )
                 })}

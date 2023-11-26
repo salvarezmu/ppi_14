@@ -3,7 +3,7 @@
     height: 100vh;
     display: grid;
     grid-template-columns: 15% 85%;
-    grid-template-rows: 88% 12%;
+    grid-template-rows: 92% 8%;
 }
 
 .trx-transactions-page-container {
@@ -22,8 +22,10 @@
 
 #trx-transactions-page-header {
     display: grid;
-    grid-template-columns: 55% 15% 30%;
+    grid-template-columns: 65% 15% 20%;
     width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
 }
 
 .trx-transactions-page-header-info {
@@ -42,14 +44,17 @@
 .trx-transactions-page-header-info-actions-input{
     display: flex;
     flex-flow: column;
-    width: 70%;
+    width: 40%;
 }
 
 #trx-transactions-page-header-balance {
     display: flex;
     justify-content: center;
     flex-direction: column;
+    row-gap: 5px;
 }
 
-
-  
+.p-balance{
+    margin: 0;
+    padding: 0;
+}
