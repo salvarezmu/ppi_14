@@ -103,7 +103,7 @@ export function CategoriesPage() {
         return (
             <div>
 
-                <PieChart width={400} height={400}>
+                <PieChart width={600} height={600}>
                     <Pie data={SumObj} dataKey="value" cx="50%" cy="50%" outerRadius={60} fill="#8884d8" colorInterpolation=""/>
                     <Tooltip/>
                 </PieChart>
