@@ -104,30 +104,32 @@ export function CategoriesPage() {
     const generateGraph = () => {
 
         const mappedData = transactions.map(item => ({
-            name: item[0],
+            name: item[2], // categoria
             value: item[1]
         }));
 
-        const mappedData2 = transactions.map(item => ({
-            name: item[0],
-            value: item[1]
-        }));
 
         // Crear un objeto para almacenar las sumas por categoría
-        let sumasPorCategoria: { [categoria: string]: number } = {};
+        const sumasPorCategoria: { [categoria: string]: number } = {};
 
         // Calcular la suma por categoría
-        data02.forEach(item => {
+        mappedData.forEach(item => {
             const { name, value } = item;
-            sumasPorCategoria[name] = (sumasPorCategoria[name] || 0) + value;
+        sumasPorCategoria[name] = (sumasPorCategoria[name] || 0) + value;
         });
+
+        const SumObj = Object.keys(sumasPorCategoria).map(categoria => ({
+            name: categoria,
+            value: sumasPorCategoria[categoria],
+          }));
+
+        console.log(SumObj)
 
         return (
             <div>
 
                 <PieChart width={400} height={400}>
-                    <Pie data={data01} dataKey="value" cx="50%" cy="50%" outerRadius={60} fill="#8884d8" />
-                    <Pie data={data02} dataKey="value" cx="50%" cy="50%" innerRadius={70} outerRadius={90} fill="#82ca9d" label />
+                    <Pie data={SumObj} dataKey="value" cx="50%" cy="50%" outerRadius={60} fill="#8884d8" colorInterpolation=""/>
                     <Tooltip/>
                 </PieChart>
 
