@@ -141,7 +141,7 @@ export default function ProfilePage() {
                             className={"profile-page-form-input"}
                             required
                             variant="filled"
-                            label="Nueva antigua"
+                            label="Nueva contraseña"
                             value={newPassword}
                             onChange={(e) => setNewPassword(e.target.value)}
                             InputLabelProps={{style: {color: '#47525E'}}}

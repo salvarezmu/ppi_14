@@ -166,6 +166,11 @@ function ContractsPage() {
                             value={address}
                             onChange={(e) => setAddress(e.target.value)}
                         />
+                        <div className={"home-page-text"} style={{padding: "10px !important"}}>
+                            <p>¿Perdido buscando tokens? ¡Explora aquí!</p>
+                            <p><a style={{fontWeight: 'bold'}} href={"https://shasta.tronscan.org/#/tokens/list"} target={"_blank"}>TOKEN TRACKER</a></p>
+
+                        </div>
                     </div>
                 </DialogContent>
                 <DialogActions>

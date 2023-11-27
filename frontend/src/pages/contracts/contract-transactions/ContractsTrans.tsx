@@ -1,7 +1,9 @@
 import React, {useState} from 'react';
 import axios from 'axios';
 import {
+    Backdrop,
     Button,
+    CircularProgress,
     Paper,
     Table,
     TableBody,
@@ -18,14 +20,17 @@ import CollaboratorsComponent from "../../../components/collaborators/Collaborat
 const ContractsTrans: React.FC = () => {
     const [contractAddress, setContractAddress] = useState('');
     const [transactions, setTransactions] = useState<any[]>([]);
+    const [loading, setLoading] = useState(false);
 
     const handleFetchTransactions = async () => {
         try {
+            setLoading(true);
             const response = await axios.get(`/api/v1/tronapi/contract-transactions/${contractAddress}/`, {baseURL: process.env.REACT_APP_BASE_URL});
             setTransactions(response.data.response.data || []);
+            setLoading(false);
         } catch (error) {
             console.error('Error fetching transactions:', error);
-
+            setLoading(false);
         }
         console.log('response.data')
     };
@@ -75,6 +80,12 @@ const ContractsTrans: React.FC = () => {
                 </div>
             </div>
             <CollaboratorsComponent></CollaboratorsComponent>
+            <Backdrop
+                sx={{color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1}}
+                open={loading}
+            >
+                <CircularProgress color="inherit"/>
+            </Backdrop>
         </div>
     );
 };
