@@ -1,3 +1,5 @@
+import decimal
+
 from rest_framework.decorators import api_view
 
 from categories.models import Category
@@ -97,4 +99,4 @@ def get_all(request):
     mapped['USDValue'] = mapped['value'] * trm
 
     # Construye una respuesta HTTP con las categorías serializadas
-    return ApiUtils.build_generic_response({'categories': mapped.values.tolist()})
+    return ApiUtils.build_generic_response({'categories': mapped.values.tolist(), 'trm': trm})

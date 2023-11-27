@@ -33,7 +33,7 @@ const ContractsTrans: React.FC = () => {
     return (
         <div className="contracts-page-father">
             <SideBarComponent/>
-            <div className="trx-transactions-page-container">
+            <div className="contract-transactions-page-container">
                 <h2 className={"title-contracts"}>Transacciones de tokens:</h2>
                 <div className={"contract-transactions-header"}>
                     <TextField
