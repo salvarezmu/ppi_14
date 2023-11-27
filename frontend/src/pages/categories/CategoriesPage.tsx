@@ -1,9 +1,10 @@
 import SideBarComponent from "../../components/sidebar/SideBarComponent";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useRef} from "react";
 import CollaboratorsComponent from "../../components/collaborators/CollaboratorsComponent";
 import {
     Backdrop,
     CircularProgress,
+    Button,
     createSvgIcon,
     Paper,
     Table,
@@ -14,18 +15,24 @@ import {
     TableRow,
     Typography
 } from "@mui/material";
+import Modal from "react-modal";
 import {CategoryTransactions} from "../../types/CategoryTransaction";
 import './CategoriesPage.css'
 import {GenericUtils} from "../../utils/GenericUtils";
 import {BackendConstants} from "../../constants/BackendConstants";
 import {AxiosUtils} from "../../utils/AxiosUtils";
 import {GetAllCategoriesRes} from "../../types/responses/GetAllCategoriesRes";
+import html2canvas from "html2canvas";
+import {saveAs} from "file-saver";
+import { PieChart, Pie, Cell, Tooltip } from 'recharts';
+
 
 export function CategoriesPage() {
 
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState("");
     const [transactions, setTransactions] = useState<CategoryTransactions>([]);
+    const [modalIsOpen, setIsOpen] = useState(false);
 
     const copyOnClipboard = async (e: any) => {
         await navigator.clipboard.writeText(e.target.innerText);
@@ -57,6 +64,111 @@ export function CategoriesPage() {
         getCategories();
     }, [])
 
+    const downloadAsPng = (element: any) => {
+        html2canvas(element).then((canvas) => {
+            canvas.toBlob((blob) => {
+                if (blob) {
+                    saveAs(blob, "grafico.png");
+                }
+
+            });
+        });
+    };
+
+
+    const generateGraph = () => {
+
+        const mappedData = transactions.map(item => ({
+            name: item[2], // categoria
+            value: item[1]
+        }));
+
+
+        // Crear un objeto para almacenar las sumas por categoría
+        const sumasPorCategoria: { [categoria: string]: number } = {};
+
+        // Calcular la suma por categoría
+        mappedData.forEach(item => {
+            const { name, value } = item;
+        sumasPorCategoria[name] = (sumasPorCategoria[name] || 0) + value;
+        });
+
+        const SumObj = Object.keys(sumasPorCategoria).map(categoria => ({
+            name: categoria,
+            value: sumasPorCategoria[categoria],
+          }));
+
+        console.log(SumObj)
+
+        return (
+            <div>
+
+                <PieChart width={600} height={600}>
+                    <Pie data={SumObj} dataKey="value" cx="50%" cy="50%" outerRadius={60} fill="#8884d8" colorInterpolation=""/>
+                    <Tooltip/>
+                </PieChart>
+
+            </div>
+
+        )
+
+    }
+
+    const BuildGraphModule = () => {
+        const ref = useRef<HTMLDivElement>(null);
+        if (transactions && transactions.length > 0 ) {
+            return (
+                <div>
+                    <Button
+                        variant="contained"
+                        onClick={() => setIsOpen(true)}
+                        style={{marginLeft: '6px', height: '35px', marginTop: '10px', marginBottom: '10px'}}>
+                        Gráfico
+                    </Button>
+
+                    <Modal
+                        isOpen={modalIsOpen}
+                        onRequestClose={() => setIsOpen(false)}
+                        contentLabel="Gráfico"
+                    >
+
+                        <Button
+                            variant="contained"
+                            style={{
+                                marginLeft: '9px',
+                                height: '6%',
+                                width: '6%',
+                                marginTop: '15px',
+                                marginBottom: '10px',
+                                backgroundColor: 'red'
+                            }}
+                            onClick={() => setIsOpen(false)}
+                        >
+                            Cerrar
+                        </Button>
+                        <Button onClick={() => downloadAsPng(ref.current)}
+                                variant="contained"
+                                style={{
+                                    marginLeft: '9px',
+                                    height: '6%',
+                                    width: '17%',
+                                    marginTop: '15px',
+                                    marginBottom: '10px'
+                                }}
+                        >
+                            Descargar
+                        </Button>
+
+                        <div>
+                            <div ref={ref} style={{marginLeft: '30%'}}>{generateGraph()}</div>
+                        </div>
+
+                    </Modal>
+                </div>
+            )
+        }
+    }
+
     return (
         <div id={"categories-page-father"}>
             <SideBarComponent/>
@@ -64,6 +176,7 @@ export function CategoriesPage() {
                 <h2 style={{margin: '10px 0 5px 10px', padding: 0}}>
                     Transacciones categorizadas:
                 </h2>
+                {BuildGraphModule()}
                 <div>
                     {error && <Typography style={{marginLeft: '10px'}} variant="h6" color="error">{error}</Typography>}
                     <TableContainer sx={{ borderRadius: 0, boxShadow: 0}} component={Paper}>
