@@ -75,31 +75,6 @@ export function CategoriesPage() {
         });
     };
 
-    const data01 = [
-        { name: 'Group A', value: 400 },
-        { name: 'Group B', value: 300 },
-        { name: 'Group C', value: 300 },
-        { name: 'Group D', value: 200 },
-      ];
-
-
-
-      const data02 = [
-        { name: 'comida', value: 100 },
-        { name: 'comida', value: 300 },
-        { name: 'comida', value: 100 },
-        { name: 'banco', value: 80 },
-        { name: 'banco', value: 40 },
-        { name: 'banco', value: 30 },
-        { name: 'viaje', value: 50 },
-        { name: 'viaje', value: 100 },
-        { name: 'viaje', value: 200 },
-        { name: 'viaje', value: 150 },
-        { name: 'viaje', value: 50 },
-      ];
-
-
-
 
     const generateGraph = () => {
 
