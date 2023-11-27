@@ -64,7 +64,7 @@ def categorize_transaction(request):
     category.save()
 
     # Serializa la transacción guardada para incluirla en la respuesta
-    serialized = CategorySerializer(category).data()
+    serialized = CategorySerializer(category).data
     return ApiUtils.build_generic_response({'transaction': serialized})
 
 

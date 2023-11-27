@@ -2,7 +2,7 @@ import React, {useRef, useState} from "react";
 import './TrxTransactionsPage.css'
 import {SideBarComponent} from "../../components/sidebar/SideBarComponent";
 import CollaboratorsComponent from "../../components/collaborators/CollaboratorsComponent";
-import {TRXTransactions} from "../../types/TRXTransaction";
+import {TRXTransaction, TRXTransactions} from "../../types/TRXTransaction";
 import {CoinSymbolConstants} from "../../constants/CoinSymbolConstants";
 import {AxiosUtils} from "../../utils/AxiosUtils";
 import {BackendConstants} from "../../constants/BackendConstants";
@@ -12,7 +12,9 @@ import {
     Backdrop,
     Button,
     CircularProgress,
+    createSvgIcon,
     FormControl,
+    IconButton,
     InputLabel,
     NativeSelect,
     Paper,
@@ -46,8 +48,23 @@ import html2canvas from "html2canvas";
 import {saveAs} from "file-saver";
 import ExcelExport from "../../components/export-excel/ExcelExport";
 import TransactionsFilter from "../../components/transactions-filter/TransactionsFilter";
+import CategorizeComponent from "../../components/categorize/CategorizeComponent";
 
 const TrxTransactionsPage = () => {
+
+    const PlusIcon = createSvgIcon(
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="h-6 w-6"
+        >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+        </svg>,
+        'Plus',
+    );
 
     const login = GenericUtils.resolveLogin();
     const stateAddress = useLocation().state?.propAddress;
@@ -63,6 +80,8 @@ const TrxTransactionsPage = () => {
     const [modalIsOpen, setIsOpen] = useState(false);
     const [filterRecipient, setFilterRecipient] = useState<string>('');
     const [filterSender, setFilterSender] = useState<string>('');
+    const [openCategorize, setOpenCategorize] = useState(false);
+    const [selectedTransaction, setSelectedTransaction] = useState<TRXTransaction>();
 
     const showBalance = () => {
         if (balance >= 0) {
@@ -303,11 +322,11 @@ const TrxTransactionsPage = () => {
 
     const buildTable = (isLogged: boolean) => {
         return (
-            <TableContainer sx={{ borderRadius: 0, boxShadow: 0}} component={Paper}>
+            <TableContainer sx={{borderRadius: 0, boxShadow: 0}} component={Paper}>
                 <Table sx={{minWidth: 650}} aria-label="simple table" size={"medium"}>
                     <TableHead>
                         <TableRow>
-                            {['TxID', 'Valor', 'USD', 'Fecha', 'Desde', 'Hacia', 'Tipo'].map(cn => {
+                            {['TxID', 'Valor', 'USD', 'Fecha', 'Desde', 'Hacia', 'Tipo', 'Acciones'].map(cn => {
                                 return (<TableCell key={cn}>{cn}</TableCell>);
                             })}
                         </TableRow>
@@ -325,6 +344,14 @@ const TrxTransactionsPage = () => {
                                 <TableCell style={{cursor: 'copy', maxWidth: 180, overflow: 'hidden'}} align="left"
                                            onClick={copyOnClipboard}>{row[4]}</TableCell>
                                 <TableCell align="left">{row[6]}</TableCell>
+                                <TableCell>
+                                    <IconButton aria-label="delete" onClick={() => {
+                                        setSelectedTransaction(row);
+                                        setOpenCategorize(true);
+                                    }}>
+                                        <PlusIcon></PlusIcon>
+                                    </IconButton>
+                                </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
@@ -377,6 +404,7 @@ const TrxTransactionsPage = () => {
                     {buildTable(login.isLogged)}
                 </div>
             </div>
+            <CategorizeComponent transaction={selectedTransaction as TRXTransaction} openCategorize={openCategorize} setOpenCategorize={setOpenCategorize}/>
             <CollaboratorsComponent>
             </CollaboratorsComponent>
             <Backdrop

@@ -137,3 +137,85 @@ def delete_account(request):
     # Elimina la cuenta del usuario
     user.delete()
     return ApiUtils.build_generic_response({'message': 'Cuenta eliminada con éxito.'})
+
+
+@api_view(['PATCH'])
+def update_user(request):
+    """
+    Actualiza la información de un usuario.
+
+    Parameters:
+    - request: La solicitud HTTP que contiene los datos para actualizar el usuario.
+
+    Returns:
+    - JsonResponse: Una respuesta JSON que indica el resultado de la actualización.
+                    Contiene un mensaje y los datos actualizados del usuario si tiene éxito.
+    """
+
+    # Autenticar el token recibido en la solicitud
+    decoded = authenticate(request.GET.get('token'))
+    if not decoded:
+        return ApiUtils.build_unauthorized_response()
+
+    # Obtener el nombre de usuario proporcionado en los datos de la solicitud
+    username = request.data.get('username')
+    # Verificar si no se proporcionó un nombre de usuario
+    if not username:
+        return ApiUtils.build_bad_request_response(ApiConstants.BAD_REQUEST_ERROR)
+
+    # Buscar al usuario en la base de datos utilizando el ID extraído del token decodificado
+    user = User.objects.filter(id=decoded[1]['user_id']).first()
+
+    # Actualizar el nombre de usuario del usuario encontrado
+    user.username = username
+    user.save()
+
+    # Serializar los datos actualizados del usuario
+    serialized = UserSerializer(user).data
+    return ApiUtils.build_generic_response({'message': 'Cuenta actualizada.', 'user': serialized})
+
+
+@api_view(["PATCH"])
+def update_password(request):
+    """
+    Actualiza la contraseña de un usuario.
+
+    Parameters:
+    - request: La solicitud HTTP que contiene los datos necesarios para actualizar la contraseña.
+
+    Returns:
+    - JsonResponse: Una respuesta JSON que indica el resultado de la actualización de la contraseña.
+                    Contiene un mensaje que informa sobre el éxito o fracaso de la operación.
+    """
+
+    # Autenticar el token recibido en la solicitud
+    decoded = authenticate(request.GET.get('token'))
+    if not decoded:
+        return ApiUtils.build_unauthorized_response()
+
+    # Obtener la contraseña actual y la nueva contraseña proporcionadas en los datos de la solicitud
+    password = request.data.get('password')
+    new_password = request.data.get('newPassword')
+
+    # Verificar si no se proporcionaron ambas contraseñas
+    if (not password) or (not new_password):
+        return ApiUtils.build_bad_request_response(ApiConstants.BAD_REQUEST_ERROR)
+
+    # Buscar al usuario en la base de datos utilizando el ID extraído del token decodificado
+    user = User.objects.filter(id=decoded[1]['user_id']).first()
+
+    # Verificar si la contraseña proporcionada coincide con la contraseña almacenada del usuario
+    hashed = hashlib.sha256()
+    hashed.update(password.encode('utf-8'))
+
+    if hashed.hexdigest() != user.password:
+        return ApiUtils.build_unauthorized_response()
+
+    # Crear un hash de la nueva contraseña y actualizarla en el usuario
+    new_hashed = hashlib.sha256()
+    new_hashed.update(new_password.encode('utf-8'))
+    user.password = new_hashed.hexdigest()
+    user.save()
+
+    # Devolver una respuesta exitosa indicando que la contraseña se actualizó correctamente
+    return ApiUtils.build_generic_response({'message': 'Contraseña actualizada.'})
