@@ -288,7 +288,7 @@ const TrxTransactionsPage = () => {
                                     marginBottom: '10px'
                                 }}
                         >
-                            Descargar como PNG
+                            Descargar
                         </Button>
 
                         <div>
@@ -303,8 +303,8 @@ const TrxTransactionsPage = () => {
 
     const buildTable = (isLogged: boolean) => {
         return (
-            <TableContainer id={"trx-transactions-page-table"} component={Paper}>
-                <Table sx={{minWidth: 650}} aria-label="simple table">
+            <TableContainer sx={{ borderRadius: 0, boxShadow: 0}} component={Paper}>
+                <Table sx={{minWidth: 650}} aria-label="simple table" size={"medium"}>
                     <TableHead>
                         <TableRow>
                             {['TxID', 'Valor', 'USD', 'Fecha', 'Desde', 'Hacia', 'Tipo'].map(cn => {

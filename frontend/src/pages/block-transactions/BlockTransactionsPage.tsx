@@ -72,9 +72,9 @@ const BlockTransactionsPage = () => {
         <div className={"transactions-page-father"}>
             <SideBarComponent></SideBarComponent>
             <div className="container"> {/* Aplica la clase de contenedor desde el archivo CSS */}
-                <Typography style={{marginLeft: '10px'}} variant="h5" gutterBottom>
+                <h2 style={{margin: '10px 0 5px 10px', padding: 0}}>
                     Transacciones de un bloque:
-                </Typography>
+                </h2>
                 <TextField
                     style={{marginLeft: '10px', width: '20%'}}
                     label="Número del bloque:"
@@ -94,8 +94,8 @@ const BlockTransactionsPage = () => {
                 </Button>
                 <div>
                     {error && <Typography style={{marginLeft: '10px'}} variant="h6" color="error">{error}</Typography>}
-                    <TableContainer component={Paper} style={{marginTop: '16px'}}>
-                        <Table>
+                    <TableContainer sx={{ borderRadius: 0, boxShadow: 0}} component={Paper} style={{marginTop: '16px'}}>
+                        <Table size={"small"}>
                             <TableHead>
                                 <TableRow>
                                     <TableCell>ID de Transacción</TableCell>

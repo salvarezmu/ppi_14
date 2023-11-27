@@ -3,7 +3,7 @@
     height: 100vh;
     display: grid;
     grid-template-columns: 15% 85%;
-    grid-template-rows: 92% 8%;
+    grid-template-rows: 90% 10%;
 }
 
 .content-container {
@@ -16,4 +16,16 @@
     height: 100%;
     margin-top: 20px;
 }
-  
+
+.contract-transactions-header {
+    box-sizing: border-box;
+    padding: 15px;
+    display: flex;
+    column-gap: 10px;
+    align-items: center;
+}
+
+.title-contracts {
+    margin: 0;
+    padding: 5px 0 0 15px;
+}

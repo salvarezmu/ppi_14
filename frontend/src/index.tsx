@@ -10,11 +10,12 @@ import RegisterPage from "./pages/register/RegisterPage";
 import LoginPage from "./pages/login/LoginPage";
 import HistoryBlock from './pages/block-history/BlockHistoryPage';
 import {HomePage} from "./pages/home/HomePage";
-import DeleteAccount from "./pages/delete/DeleteAccount";
+import DeleteAccount from "./components/delete-account/DeleteAccount";
 import ContractsPage from "./pages/contracts/ContractsPage";
 import {CategoriesPage} from "./pages/categories/CategoriesPage";
 import {CategoriesDetailPage} from "./pages/categories/detail/CategoriesDetailPage";
-import ContractsTrans from './pages/contracts/Contract_transactions/ContractsTrans';
+import ContractsTrans from './pages/contracts/contract-transactions/ContractsTrans';
+import ProfilePage from './pages/profile/ProfilePage';
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
@@ -23,6 +24,7 @@ const root = ReactDOM.createRoot(
 root.render(
     <BrowserRouter>
         <Routes>
+            <Route path={RoutesConstants.PROFILE} element={<ProfilePage/>}/>
             <Route path={RoutesConstants.CATEGORIZED_TRANSACTIONS_DETAIL} element={<CategoriesDetailPage/>}/>
             <Route path={RoutesConstants.CATEGORIZED_TRANSACTIONS} element={<CategoriesPage/>}/>
             <Route path={RoutesConstants.TRC20_CONTRACTS} element={<ContractsPage/>}/>

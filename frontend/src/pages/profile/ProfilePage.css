@@ -1,0 +1,58 @@
+.profile-page-father {
+    width: 100%;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 15% 85%;
+    grid-template-rows: 90% 10%;
+}
+
+.profile-page-container {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.profile-page-avatar-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow: column;
+    row-gap: 30px;
+}
+
+.profile-page-buttons-login {
+    display: flex;
+    width: 100%;
+    flex-flow: column;
+    justify-content: center;
+    row-gap: 10px;
+    align-items: center;
+}
+
+.auth-buttons-profile {
+    width: 40%;
+}
+
+.profile-page-data-container {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-rows: max-content max-content max-content 1fr;
+}
+
+.profile-page-data-name-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    row-gap: 10px;
+}
+
+.profile-page-form-input {
+    width: 50%;
+}

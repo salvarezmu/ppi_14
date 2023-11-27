@@ -87,7 +87,7 @@ export class HomePage extends React.Component<unknown, State> {
                         <p><a style={{fontWeight: 'bold'}} href={"https://shasta.tronscan.org/#/"} target={"_blank"}>SHASTA</a></p>
                     </div>
                     <div className={"home-page-address-container"}>
-                        <Typography variant="h5" gutterBottom>
+                        <Typography variant="h6" style={{fontWeight: 'bold'}} gutterBottom>
                             Ingresa una address
                         </Typography>
                         <TextField
