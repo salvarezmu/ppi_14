@@ -16,10 +16,9 @@ class Category(models.Model):
 
     user_id = models.IntegerField()
     tx_id = models.TextField()
-    value = models.IntegerField()
+    value = models.TextField()
     timestamp = models.IntegerField()
     from_address = models.TextField()
     to_address = models.TextField()
     description = models.TextField()
     category = models.TextField()
-

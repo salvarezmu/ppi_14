@@ -195,7 +195,7 @@ export function CategoriesPage() {
                                                    align="left" onClick={copyOnClipboard}>{row[0]}</TableCell>
                                         <TableCell align="left">{`${row[1]} TRX`}</TableCell>
                                         <TableCell
-                                            align="left">{`${row[7].toFixed(4)} $`}</TableCell>
+                                            align="left">{`${row[1].toFixed(4)} $`}</TableCell>
                                         <TableCell align="left">{new Date(row[6]).toLocaleDateString()}</TableCell>
                                         <TableCell style={{cursor: 'copy', maxWidth: 180, overflow: 'hidden'}}
                                                    align="left"

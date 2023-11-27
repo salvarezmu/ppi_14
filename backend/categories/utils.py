@@ -9,7 +9,7 @@ def map_transactions_from_categories(categories):
     for transaction in categories:
         mapped.append([
             transaction.tx_id,
-            transaction.value,
+            float(transaction.value),
             transaction.category,
             transaction.description,
             transaction.from_address,
