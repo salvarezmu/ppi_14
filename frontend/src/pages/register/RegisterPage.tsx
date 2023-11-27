@@ -51,7 +51,7 @@ class RegisterPage extends React.Component<unknown, State> {
                 return;
             }
 
-            const body = {username, email, password};
+            const body = {username: username.toLowerCase(), email: email.toLowerCase(), password};
             const registerResponse: RegisterRes = await AxiosUtils.post<RegisterRes>(BackendConstants.REGISTER, body);
             localStorage.setItem(LocalStorageConstants.ACCESS_TOKEN, registerResponse.data.access_token);
             localStorage.setItem(LocalStorageConstants.USER, JSON.stringify(registerResponse.data.user));

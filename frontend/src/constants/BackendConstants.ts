@@ -10,5 +10,8 @@ export enum BackendConstants {
     GET_ALL_CONTRACTS = '/api/v1/contract/get-all',
     SAVE_CONTRACT = '/api/v1/contract/save',
     GET_ALL_CATEGORIES = '/api/v1/category/get-all',
-    GENERATE_QR = '/api/v1/tronapi/generate-qr/'
+    GENERATE_QR = '/api/v1/tronapi/generate-qr/',
+    UPDATE_USER = '/api/v1/users/update-account/',
+    UPDATE_PASSWORD = '/api/v1/users/update-password/',
+    CATEGORIZE_TRANSACTION = '/api/v1/category/categorize'
 }

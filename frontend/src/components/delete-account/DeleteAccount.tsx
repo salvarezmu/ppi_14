@@ -42,7 +42,7 @@ const DeleteAccount = () => {
     return (<>
             <Button variant="contained" className={"auth-buttons-profile-delete"}
                     onClick={() => setConfirmDialogOpen(true)}>
-                Delete Account
+                Borrar cuenta
             </Button>
             <div>
 

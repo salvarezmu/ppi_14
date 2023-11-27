@@ -29,7 +29,7 @@ class LoginPage extends React.Component<unknown, State> {
         const password: string = e.target.password.value;
         this.setState({loading: true});
         try {
-            const body = {email, password}
+            const body = {email: email.toLowerCase(), password}
             const loginResponse: LoginRes = await AxiosUtils.post<LoginRes>(BackendConstants.LOGIN, body);
             localStorage.setItem(LocalStorageConstants.ACCESS_TOKEN, loginResponse.data.access_token);
             localStorage.setItem(LocalStorageConstants.USER, JSON.stringify(loginResponse.data.user));
