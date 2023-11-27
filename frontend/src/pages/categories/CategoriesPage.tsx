@@ -61,13 +61,13 @@ export function CategoriesPage() {
         <div id={"categories-page-father"}>
             <SideBarComponent/>
             <div className="container"> {/* Aplica la clase de contenedor desde el archivo CSS */}
-                <Typography style={{marginLeft: '10px'}} variant="h5" gutterBottom>
+                <h2 style={{margin: '10px 0 5px 10px', padding: 0}}>
                     Transacciones categorizadas:
-                </Typography>
+                </h2>
                 <div>
                     {error && <Typography style={{marginLeft: '10px'}} variant="h6" color="error">{error}</Typography>}
-                    <TableContainer id={"trx-transactions-page-table"} component={Paper}>
-                        <Table sx={{minWidth: 650}} aria-label="simple table">
+                    <TableContainer sx={{ borderRadius: 0, boxShadow: 0}} component={Paper}>
+                        <Table sx={{minWidth: 650}} aria-label="simple table" size={"small"}>
                             <TableHead>
                                 <TableRow>
                                     {['TxID', 'Valor', 'USD', 'Fecha', 'Desde', 'Hacia', 'Categoria'].map(cn => {

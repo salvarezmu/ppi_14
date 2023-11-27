@@ -6,16 +6,20 @@ import {Link} from "react-router-dom";
 import {Button} from "@mui/material";
 import {GenericUtils} from "../../utils/GenericUtils";
 import {LocalStorageConstants} from "../../constants/LocalStorageConstants";
-import DeleteAccount from "../../pages/delete/DeleteAccount";
+import DeleteAccount from "../delete-account/DeleteAccount";
 import {Navigate} from "react-router";
 
 type Module = {
     name: ModuleNamesConstants | string;
     to: RoutesConstants;
     isPrivate?: boolean;
+    isHidden?: boolean;
 }
 
-export class SideBarComponent extends React.Component<unknown, { redirect: boolean, to: string }> {
+export class SideBarComponent extends React.Component<unknown, {
+    redirect: boolean,
+    to: string
+}> {
     constructor(props: Record<string, unknown>) {
         super(props);
         this.state = {
@@ -29,6 +33,12 @@ export class SideBarComponent extends React.Component<unknown, { redirect: boole
         {
             name: ModuleNamesConstants.HOME,
             to: RoutesConstants.HOME,
+        },
+        {
+            name: ModuleNamesConstants.PROFILE,
+            to: RoutesConstants.PROFILE,
+            isPrivate: true,
+            isHidden: true,
         },
         {
             name: ModuleNamesConstants.TRANSACTIONS,
@@ -59,13 +69,6 @@ export class SideBarComponent extends React.Component<unknown, { redirect: boole
         },
     ]
 
-    logout = (e: any) => {
-        e.preventDefault();
-        localStorage.removeItem(LocalStorageConstants.USER);
-        localStorage.removeItem(LocalStorageConstants.ACCESS_TOKEN);
-        window.location.reload();
-    }
-
     redirect = (to: string) => {
         this.setState({to, redirect: true});
     }
@@ -84,6 +87,7 @@ export class SideBarComponent extends React.Component<unknown, { redirect: boole
                                     <Button
                                         variant={button_variant}
                                         className={'sidebar-button'}
+                                        style={{display: m.isHidden && !this.token ? 'none' : 'inherit'}}
                                         disabled={m.isPrivate && !this.token}
                                         onClick={() => this.redirect(m.to)}
                                     >{m.name}</Button>
@@ -103,11 +107,7 @@ export class SideBarComponent extends React.Component<unknown, { redirect: boole
                             </Link>
                         </>
                         :
-                        <>
-                            <Button variant="contained" className={"auth-buttons"} onClick={this.logout}>Log
-                                out</Button>
-                            <DeleteAccount></DeleteAccount>
-                        </>
+                        <></>
                     }
                 </div>
                 {this.state.redirect ? <Navigate to={this.state.to}/> : <></>}

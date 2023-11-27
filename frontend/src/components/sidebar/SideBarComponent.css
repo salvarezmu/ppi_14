@@ -6,6 +6,7 @@
     grid-template-rows: 10% 80% 10%;
     padding-top: 8%;
     text-align: center;
+    position: relative;
 }
 
 .sidebar-footer {
@@ -27,7 +28,7 @@
 }
 
 .sidebar-button{
-    width: 90%;
+    width: 82%;
     font-size: 0.75rem !important;
     font-weight: bold !important;
     min-height: 35px;

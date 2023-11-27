@@ -100,9 +100,9 @@ function ContractsPage() {
         <div className={"contracts-page-father"}>
             <SideBarComponent/>
             <div>
-                <Typography style={{marginLeft: '10px'}} variant="h5" gutterBottom>
-                    Contratos Trc20:
-                </Typography>
+                <h2 style={{margin: '10px 0 0 10px', padding: 0}}>
+                    Tokens favoritos:
+                </h2>
                 <Button
                     onClick={() => setOpen(true)}
                     variant="contained"
@@ -113,8 +113,8 @@ function ContractsPage() {
                 </Button>
                 <div>
                     {error && <Typography style={{marginLeft: '10px'}}variant="h6" color="error">{error}</Typography>}
-                    <TableContainer component={Paper} style={{marginTop: '16px'}}>
-                        <Table>
+                    <TableContainer sx={{ borderRadius: 0, boxShadow: 0}} component={Paper} style={{marginTop: '16px'}}>
+                        <Table size={"small"}>
                             <TableHead>
                                 <TableRow>
                                     <TableCell>ID</TableCell>

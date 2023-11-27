@@ -1,4 +1,5 @@
 export enum ModuleNamesConstants {
+    PROFILE = 'Perfil',
     HOME = 'Inicio',
     TRANSACTIONS = 'Transacciones de TRX',
     BLOCK_TRANSACTIONS = 'Transacciones de bloque',

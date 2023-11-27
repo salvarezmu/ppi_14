@@ -3,7 +3,7 @@
     height: 100vh;
     display: grid;
     grid-template-columns: 15% 85%;
-    grid-template-rows: 92% 8%;
+    grid-template-rows: 90% 10%;
 }
 
 .trx-transactions-page-container {
@@ -45,7 +45,7 @@
 .trx-transactions-page-header-info-actions-input{
     display: flex;
     flex-flow: column;
-    width: 50%;
+    width: 60%;
 }
 
 #trx-transactions-page-header-balance {

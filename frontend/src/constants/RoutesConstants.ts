@@ -1,4 +1,5 @@
 export enum RoutesConstants {
+    PROFILE = '/profile/',
     HOME = '/',
     TRX_TRANSACTIONS = '/trxTransactions/',
     ADDRESS_QR_CODE = '/addressqrcode/',
@@ -11,5 +12,4 @@ export enum RoutesConstants {
     CATEGORIZED_TRANSACTIONS = '/transactions-categories',
     CONTRACT_TRANSACTIONS = '/contract_transac',
     CATEGORIZED_TRANSACTIONS_DETAIL = '/transactions-categories/detail',
-    DATA_TREAT = '/data_treatment'
 }
